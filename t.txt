@@ -1,0 +1,3375 @@
+﻿/*script for User Details BP*/  
+
+var testJson;
+var index;  	
+var bpindex;
+var emailId;
+var orgCreateEmail;
+var applId;
+var applVal;
+var userId;
+var logonId;
+var orgUserBpId;
+var role_Id;
+var userLogonId
+var mulBpIds=[];
+var bpname;
+var bptincode;
+ $(document).ready(function () {
+	 var urlRef = window.location.href;
+	 
+	 if(urlRef.includes("?ky")){
+		 var val = urlRef.indexOf("=");
+		 if(urlRef.substring(val+1,urlRef.length) == "argMis"){
+			 messageCenter('error',"The sheet doesn't contains all the required header fields");
+		 }
+		 if(urlRef.substring(val+1,urlRef.length) == "200"){
+			 messageCenter('success',"The Business places are successfully uploaded");
+		 }
+		 window.onload = function () {
+		        setTimeout( window.location.href = urlRef.substring(0,val-3), 5002);
+		       
+		    }
+		 
+	 }
+	 /*script for Online Customer BP*/   
+     jQuery.support.cors = true;
+     //manageDataTable('#onlineCustomer');
+     $('#onlineCustomer').DataTable({
+    	 columnDefs: [ {
+             "targets": [2],
+            "orderable": false
+       } ],
+       "language": {
+           "emptyTable": "No data found",
+           "info": "Showing page _PAGE_ of _PAGES_",
+           "infoFiltered": "(filtered from _MAX_ total records)"
+       },
+       "fnDrawCallback": function(oSettings) {
+           if (10 >= oSettings.fnRecordsDisplay()) {
+               $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+               
+               $(oSettings.nTableWrapper).find('.dataTables_info').hide();
+               //$(oSettings.nTableWrapper).find('.dataTables_length').hide();
+           } else {
+               $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+               
+               $(oSettings.nTableWrapper).find('.dataTables_info').show();
+               //  $(oSettings.nTableWrapper).find('.dataTables_length').show();
+           }
+       }
+     });
+     
+     $('#manageBPDLTable').DataTable({
+    	 retrieve: true,
+    	 "language": {
+             "emptyTable": "No data available",
+         },
+     "fnDrawCallback": function(oSettings) {
+         if (10 >= oSettings.fnRecordsDisplay()) {
+              $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+             /* $(oSettings.nTableWrapper).find('.dataTables_filter').show();*/
+              $(oSettings.nTableWrapper).find('.dataTables_info').hide();
+              $(oSettings.nTableWrapper).find('.dataTables_length').hide();
+         } else {
+             $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+             $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+             $(oSettings.nTableWrapper).find('.dataTables_info').show();
+             $(oSettings.nTableWrapper).find('.dataTables_length').show();
+         }
+     },
+     });
+     
+     $('#viewapiloghis').DataTable({
+    	 retrieve: true,
+    	 "language": {
+             "emptyTable": "No data available",
+         },
+     "fnDrawCallback": function(oSettings) {
+         if (10 >= oSettings.fnRecordsDisplay()) {
+              $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+             /* $(oSettings.nTableWrapper).find('.dataTables_filter').show();*/
+              $(oSettings.nTableWrapper).find('.dataTables_info').hide();
+              $(oSettings.nTableWrapper).find('.dataTables_length').hide();
+         } else {
+             $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+             $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+             $(oSettings.nTableWrapper).find('.dataTables_info').show();
+             $(oSettings.nTableWrapper).find('.dataTables_length').show();
+         }
+     },
+     });
+     
+     $("#gspDetailsTable").DataTable({
+         	"language": {
+	             "emptyTable":"No data found",
+	             "info": "Showing page _PAGE_ of _PAGES_",
+	             /*"infoFiltered": "(filtered from _MAX_ total records)",*/
+	             "lengthMenu": "Display _MENU_ records"
+	         },
+	         "fnDrawCallback": function(oSettings) {
+	             if (10 >= oSettings.fnRecordsDisplay()) {
+	                  $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+	                 /* $(oSettings.nTableWrapper).find('.dataTables_filter').show();*/
+	                  $(oSettings.nTableWrapper).find('.dataTables_info').hide();
+	                  $(oSettings.nTableWrapper).find('.dataTables_length').hide();
+	             } else {
+	                 $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+	                 $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+	                 $(oSettings.nTableWrapper).find('.dataTables_info').show();
+	                 $(oSettings.nTableWrapper).find('.dataTables_length').show();
+	             }
+	         },
+     });
+     
+     $("#bpSettingTable").DataTable({
+    	 "columnDefs": [ {
+         	"targets": 3,
+         	"orderable": false
+         	} ],
+         	"language": {
+	             "emptyTable":"No data found",
+	             "info": "Showing page _PAGE_ of _PAGES_",
+	             /*"infoFiltered": "(filtered from _MAX_ total records)",*/
+	             "lengthMenu": "Display _MENU_ records"
+	         },
+	         "fnDrawCallback": function(oSettings) {
+	             if (10 >= oSettings.fnRecordsDisplay()) {
+	                  $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+	                 /* $(oSettings.nTableWrapper).find('.dataTables_filter').show();*/
+	                  $(oSettings.nTableWrapper).find('.dataTables_info').hide();
+	                  $(oSettings.nTableWrapper).find('.dataTables_length').hide();
+	             } else {
+	                 $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+	                 $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+	                 $(oSettings.nTableWrapper).find('.dataTables_info').show();
+	                 $(oSettings.nTableWrapper).find('.dataTables_length').show();
+	             }
+	         },
+     });
+     /*script end for Online Customer BP*/   
+	 $('#GetOrgTable').DataTable({
+		/* retrieve: true,
+		 scrollY: true,
+		*/
+		 responsive: true,
+		 scrollX:true,
+		 "language": {
+             "emptyTable":"No data found",
+             "info": "Showing page _PAGE_ of _PAGES_",
+             /*"infoFiltered": "(filtered from _MAX_ total records)",*/
+             "lengthMenu": "Display _MENU_ records"
+         },
+         "fnDrawCallback": function(oSettings) {
+             if (10 >= oSettings.fnRecordsDisplay()) {
+                  $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+                 /* $(oSettings.nTableWrapper).find('.dataTables_filter').show();*/
+                  $(oSettings.nTableWrapper).find('.dataTables_info').hide();
+                  $(oSettings.nTableWrapper).find('.dataTables_length').hide();
+             } else {
+                 $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+                 $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+                 $(oSettings.nTableWrapper).find('.dataTables_info').show();
+                 $(oSettings.nTableWrapper).find('.dataTables_length').show();
+             }
+             $(".select-removal").removeClass("getorg-select");
+     		$(".select-removal").addClass("getorg-deselected");
+     		$("#getOrgDetailsTab").addClass("getorg-submit-btn-disabled");
+     		$("#getOrgDetailsTab").removeClass("getorg-submit-btn");
+         },
+	});
+	 
+	 $('#TaxPayerTable').DataTable({
+			
+			"language": {
+	             "emptyTable":"No data found",
+	             /* "info": "Showing page _PAGE_ of _PAGES_",
+	             "infoFiltered": "(filtered from _MAX_ total records)",*/
+	             "lengthMenu": "Display _MENU_ records"
+	         },
+			 length: 0,
+			 "fnDrawCallback": function(oSettings) {
+	             if (10 >= oSettings.fnRecordsDisplay()) {
+	                 $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+	                 $(oSettings.nTableWrapper).find('.dataTables_filter').hide();
+	                 $(oSettings.nTableWrapper).find('.dataTables_info').hide();
+	                 $(oSettings.nTableWrapper).find('.dataTables_length').hide();
+	             } else {
+	                 $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+	                 $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+	                 $(oSettings.nTableWrapper).find('.dataTables_info').show();
+	                 $(oSettings.nTableWrapper).find('.dataTables_length').show();
+	             }
+	         },
+		});
+	 
+	 $('#GetOrgTableEmpty').DataTable({
+		 "responsive":true,
+		 "retrieve": true,
+		 "language": {
+             "emptyTable": "No data found",
+             "info": "Showing page _PAGE_ of _PAGES_",
+             //"infoFiltered": "(filtered from _MAX_ total records)"
+         },
+         "fnDrawCallback": function(oSettings) {
+             if (10 >= oSettings.fnRecordsDisplay()) {
+                 $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+                 $(oSettings.nTableWrapper).find('.dataTables_filter').hide();
+                 $(oSettings.nTableWrapper).find('.dataTables_info').hide();
+                 $(oSettings.nTableWrapper).find('.dataTables_length').hide();
+             } else {
+                 $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+                 $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+                 $(oSettings.nTableWrapper).find('.dataTables_info').show();
+                 $(oSettings.nTableWrapper).find('.dataTables_length').show();
+             }
+         },
+	});
+	 
+	 $('#bussinesPlacetable').DataTable({
+		 /*retrieve: true,
+			 scrollY: true,
+			 scrollX:true,*/
+			 "language": {
+	             "emptyTable":"No data found",
+	             "info": "Showing page _PAGE_ of _PAGES_",
+	             /*"infoFiltered": "(filtered from _MAX_ total records)",*/
+	             "lengthMenu": "Display _MENU_ records"
+	         },
+	         "fnDrawCallback": function(oSettings) {
+	             if (10 >= oSettings.fnRecordsDisplay()) {
+	                  $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+	                 /* $(oSettings.nTableWrapper).find('.dataTables_filter').show();*/
+	                  $(oSettings.nTableWrapper).find('.dataTables_info').hide();
+	                  $(oSettings.nTableWrapper).find('.dataTables_length').hide();
+	             } else {
+	                 $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+	                 $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+	                 $(oSettings.nTableWrapper).find('.dataTables_info').show();
+	                 $(oSettings.nTableWrapper).find('.dataTables_length').show();
+	             }
+	         },
+		});
+	 
+	 $('#orgSettingTable').DataTable({
+		 /*retrieve: true,
+			 scrollY: true,
+			 scrollX:true,*/
+			 "language": {
+	             "emptyTable":"No data found",
+	             "info": "Showing page _PAGE_ of _PAGES_",
+	             /*"infoFiltered": "(filtered from _MAX_ total records)",*/
+	             "lengthMenu": "Display _MENU_ records"
+	         },
+	         "fnDrawCallback": function(oSettings) {
+	             if (10 >= oSettings.fnRecordsDisplay()) {
+	                  $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+	                 /* $(oSettings.nTableWrapper).find('.dataTables_filter').show();*/
+	                  $(oSettings.nTableWrapper).find('.dataTables_info').hide();
+	                  $(oSettings.nTableWrapper).find('.dataTables_length').hide();
+	             } else {
+	                 $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+	                 $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+	                 $(oSettings.nTableWrapper).find('.dataTables_info').show();
+	                 $(oSettings.nTableWrapper).find('.dataTables_length').show();
+	             }
+	         },
+		});
+	 
+	 
+	 $('#applRolesDataTable').DataTable({
+		 retrieve: true,
+		 /*scrollY: true,
+			 scrollX:true,*/
+			 "language": {
+	             "emptyTable":"No data found",
+	             /* "info": "Showing page _PAGE_ of _PAGES_",
+	             "infoFiltered": "(filtered from _MAX_ total records)",*/
+	             "lengthMenu": "Display _MENU_ records"
+	         },
+	         "fnDrawCallback": function(oSettings) {
+	             if (10 >= oSettings.fnRecordsDisplay()) {
+	                  $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+	                 $(oSettings.nTableWrapper).find('.dataTables_filter').hide();
+	                  $(oSettings.nTableWrapper).find('.dataTables_info').hide();
+	                  $(oSettings.nTableWrapper).find('.dataTables_length').hide();
+	             } else {
+	                 $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+	                 $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+	                 $(oSettings.nTableWrapper).find('.dataTables_info').show();
+	                 $(oSettings.nTableWrapper).find('.dataTables_length').show();
+	             }
+	         },
+		});
+	 
+	 $('#orgLogHisDataTable').DataTable({
+		 retrieve: true,
+		 /*scrollY: true,
+			 scrollX:true,*/
+			 "language": {
+	             "emptyTable":"No data found",
+	             /* "info": "Showing page _PAGE_ of _PAGES_",
+	             "infoFiltered": "(filtered from _MAX_ total records)",*/
+	             "lengthMenu": "Display _MENU_ records"
+	         },
+	         "fnDrawCallback": function(oSettings) {
+	             if (10 >= oSettings.fnRecordsDisplay()) {
+	                  $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+	                 $(oSettings.nTableWrapper).find('.dataTables_filter').hide();
+	                  $(oSettings.nTableWrapper).find('.dataTables_info').hide();
+	                  $(oSettings.nTableWrapper).find('.dataTables_length').hide();
+	             } else {
+	                 $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+	                 $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+	                 $(oSettings.nTableWrapper).find('.dataTables_info').show();
+	                 $(oSettings.nTableWrapper).find('.dataTables_length').show();
+	             }
+	         },
+		});
+	 $('#bg_jobs_table_global').DataTable({
+		 retrieve: true,
+		 "language": {
+             "emptyTable": "No data found",
+             "info": "Showing page _PAGE_ of _PAGES_",
+            /* "infoFiltered": "(filtered from _MAX_ total records)"*/
+         },
+		  "fnDrawCallback": function(oSettings) {
+		         if (10 >= oSettings.fnRecordsDisplay()) {
+		              $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+		             /* $(oSettings.nTableWrapper).find('.dataTables_filter').show();*/
+		              $(oSettings.nTableWrapper).find('.dataTables_info').hide();
+		              $(oSettings.nTableWrapper).find('.dataTables_length').hide();
+		         } else {
+		             $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+		             $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+		             $(oSettings.nTableWrapper).find('.dataTables_info').show();
+		             $(oSettings.nTableWrapper).find('.dataTables_length').show();
+		         }
+		     },
+	});
+	 
+	 $('#manageGlobalDLTable').DataTable({
+			retrieve: true,
+			 "language": {
+	             "emptyTable": "No data found",
+	             "info": "Showing page _PAGE_ of _PAGES_",
+	            /* "infoFiltered": "(filtered from _MAX_ total records)"*/
+	         },
+			 "fnDrawCallback": function(oSettings) {
+		         if (10 >= oSettings.fnRecordsDisplay()) {
+		              $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+		              $(oSettings.nTableWrapper).find('.dataTables_info').hide();
+		              $(oSettings.nTableWrapper).find('.dataTables_length').hide();
+		         } else {
+		             $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+		             $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+		             $(oSettings.nTableWrapper).find('.dataTables_info').show();
+		             $(oSettings.nTableWrapper).find('.dataTables_length').show();
+		         }
+		     },
+		 }
+	);
+	 
+	 $('#addFinPeriodTable').DataTable({
+		 retrieve: true,
+		 "language": {
+             "emptyTable": "No data found",
+             "info": "Showing page _PAGE_ of _PAGES_",
+            /* "infoFiltered": "(filtered from _MAX_ total records)"*/
+         },
+		  "fnDrawCallback": function(oSettings) {
+		         if (10 >= oSettings.fnRecordsDisplay()) {
+		              $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+		             /* $(oSettings.nTableWrapper).find('.dataTables_filter').show();*/
+		              $(oSettings.nTableWrapper).find('.dataTables_info').hide();
+		              $(oSettings.nTableWrapper).find('.dataTables_length').hide();
+		         } else {
+		             $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+		             $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+		             $(oSettings.nTableWrapper).find('.dataTables_info').show();
+		             $(oSettings.nTableWrapper).find('.dataTables_length').show();
+		         }
+		     },
+	});
+	$('#userTable').DataTable();
+	$('.userTableBlock').css({'display':'block', 'margin-top':'20px'});
+	jQuery.support.cors = true;
+
+	
+	$('#datepicker1').datepicker({maxDate: 'now',});
+	$('#datepicker2').datepicker();
+	
+ });
+ function toDateValidation(){
+	 $('#datepicker2').datepicker('destroy');
+	 var todate=$('#datepicker1').val();
+			 $('#datepicker2').datepicker({
+			 	minDate: todate,
+				maxDate: 'now',
+		        
+			});
+	
+ }
+ 
+
+/*script end  for User Details BP*/  
+        
+     /*script for Manage deleted BP*/   
+        
+        $(document).ready(function () {
+        	$('#ManageDeletedBP').DataTable();
+        	jQuery.support.cors = true;
+          //terms and condition
+        		
+            
+        		$("#applRolesDataTable").DataTable();
+        		jQuery.support.cors = true;
+        		$(".manageapplroles").click(function() {
+        			displaySpinner();
+        			manageLeftMenuLinks("manageapplroles");
+        			setContentHeight();
+        		$.ajax({
+        	        type: "GET",
+        	        contentType:"application/json; charset=utf-8",
+        	        url:"getApplRolesDetails",
+        	        success: function (data) {
+        	        	$(".right_col").html(data);
+        				$(".right_col").show();
+        				$("#applRolesPermission").hide();
+        				$("#bckManageroles").hide();
+        				$("#roleHeaderDesc").hide();
+        				$("table[id^=applRolesDataTable]").DataTable({
+        					
+        					"language": {
+        			             "emptyTable":"No data found",
+        			             /* "info": "Showing page _PAGE_ of _PAGES_",
+        			             "infoFiltered": "(filtered from _MAX_ total records)",*/
+        			             "lengthMenu": "Display _MENU_ records"
+        			         },
+        					 length: 0,
+        					 "fnDrawCallback": function(oSettings) {
+        			             if (10 >= oSettings.fnRecordsDisplay()) {
+        			                 $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+        			                 $(oSettings.nTableWrapper).find('.dataTables_filter').hide();
+        			                 $(oSettings.nTableWrapper).find('.dataTables_info').hide();
+        			                 $(oSettings.nTableWrapper).find('.dataTables_length').hide();
+        			             } else {
+        			                 $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+        			                 $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+        			                 $(oSettings.nTableWrapper).find('.dataTables_info').show();
+        			                 $(oSettings.nTableWrapper).find('.dataTables_length').show();
+        			             }
+        			         },
+        				});
+        				clearSpinner();
+        	        },
+        	        error: function (result) {
+        	            console.log("Error");
+        	        }
+        	    });
+        	  });
+            
+        	        	$('#manageBPDLTable').DataTable();
+        	        	jQuery.support.cors = true;
+        	        		$(".managebpdl").click(function() {
+        	        			displaySpinner();
+        	            		manageLeftMenuLinks("managebpdl");
+        	            		setContentHeight();
+        	    			$.ajax({
+        	    	            type: "GET",
+        	    	            contentType: "application/json; charset=utf-8",
+        	    	            url:"getDLJobHistory",
+        	    	            success: function (data) {
+        	    	            	$(".right_col").html(data);
+        	    	    			$(".right_col").show();
+        	    	    			$('#bp_legal_name').show();
+        	    	            	$('#bp_legal_name_bp').hide();
+        	    	    			clearSpinner();
+        	    	            },
+        	    	            error: function (result) {
+        	    	                console.log("Error");
+        	    	            }
+        	    	        });
+        	    		  });
+        	    			
+        	        		//manage global dataload jobs
+        	        		$('#manageGlobalDLTable').DataTable();
+        	        		jQuery.support.cors = true;
+        	        		$(".managegloabalbpdl").click(function() {
+        	        			displaySpinner();
+        	            		manageLeftMenuLinks("managegloabalbpdl");
+        	            		manageLeftMenuLinks("manage_global_dataload");
+        	            		setContentHeight();
+        	    			$.ajax({
+        	    	            type: "GET",
+        	    	            contentType: "application/json; charset=utf-8",
+        	    	            url:"getgloabalDLJobHistory",
+        	    	            success: function (data) {
+        	    	            	$(".right_col").html(data);
+        	    	    			$(".right_col").show();
+        	    	            	$('#hideDiv').hide();
+        	    	    			clearSpinner();
+        	    	            },
+        	    	            error: function (result) {
+        	    	                console.log("Error");
+        	    	            }
+        	    	        });
+        	    		  });
+        	        		
+        	        		//manage global scheduler jobs
+        	        		$('#bg_jobs_table_global').DataTable();
+        	        		jQuery.support.cors = true;
+        	        		$(".manageschedukerjobs").click(function() {
+        	        			displaySpinner();
+        	            		manageLeftMenuLinks("manageschedukerjobs");
+        	            		manageLeftMenuLinks("manage_global_dataload");
+        	            		setContentHeight();
+        	    			$.ajax({
+        	    	            type: "GET",
+        	    	            contentType: "application/json; charset=utf-8",
+        	    	            url:"getgloabalSchJobHistory",
+        	    	            success: function (data) {
+        	    	            	$(".right_col").html(data);
+        	    	    			$(".right_col").show();
+        	    	    			$('#bg_jobs_table_global').DataTable();
+        	    	    			clearSpinner();
+        	    	            },
+        	    	            error: function (result) {
+        	    	                console.log("Error");
+        	    	            }
+        	    	        });
+        	    		  });
+        	        		
+            	          //ManageBPJobs
+            	        		$(".managebpjobs").click(function() {
+            	        			displaySpinner();
+            	            		manageLeftMenuLinks("managebpjobs");
+            	            		setContentHeight();
+            	    			$.ajax({
+            	    	            type: "GET",
+            	    	            contentType: "application/json; charset=utf-8",
+            	    	            url:"displayBplaces?type=bplaces",
+            	    	            success: function (data) {
+            	    	            	$(".right_col").html(data);
+            	    	    			$(".right_col").show();
+            	    	    			//$('#managebplaces').DataTable();
+            	    	    			manageDataTable('#managebplaces');
+            	    	    			clearSpinner();
+            	    	            },
+            	    	            error: function (result) {
+            	    	                console.log("Error");
+            	    	            }
+            	    	        });
+            	    		  });
+            	    			 //Manageuserloginhistory	
+        	        		
+            	        		$(".userloginhistory").click(function() {
+            	        			displaySpinner();
+            	            		manageLeftMenuLinks("userloginhistory");
+            	            		setContentHeight();
+            	    			$.ajax({
+            	    	            type: "GET",
+            	    	            contentType: "application/json; charset=utf-8",
+            	    	            url:"displayUserLoginHistory",
+            	    	            success: function (data) {
+            	    	            	$(".right_col").html(data);
+            	    	    			$(".right_col").show();
+            	    	    			$("#userloginhistory").hide();
+            	    	    			clearSpinner();
+            	    	            },
+            	    	            error: function (result) {
+            	    	                console.log("Error");
+            	    	            }
+            	    	        });
+            	    		  });
+            	        		
+            	        		$('#viewapiloghis').DataTable();
+            	        		jQuery.support.cors = true;
+            	        		$(".apiloghis").click(function() {
+            	        			displaySpinner();
+            	        			manageLeftMenuLinks("apiloghis");
+            	        			setContentHeight();
+            	        		$.ajax({
+            	        	        type: "GET",
+            	        	        contentType: "application/json; charset=utf-8",
+            	        	        url:"apiloghis",
+            	        	        success: function (data) {
+            	        	        	$(".right_col").html(data);
+            	        				$(".right_col").show();
+            	        				$('#showExcelIcon').hide();
+            	        				$('#viewapiloghis').DataTable();
+            	        				clearSpinner();
+            	        	        },
+            	        	        error: function (result) {
+            	        	            console.log("Error");
+            	        	        }
+            	        	    });
+            	        	  });
+            	        		
+            	        		$('#gspDetailsTable').DataTable();
+            	        		jQuery.support.cors = true;
+            	        		$(".gspdetail").click(function() {
+            	        			displaySpinner();
+            	        			manageLeftMenuLinks("gspdetail");
+            	        			setContentHeight();
+            	        		$.ajax({
+            	        	        type: "GET",
+            	        	        contentType: "application/json; charset=utf-8",
+            	        	        url:"gspdetail",
+            	        	        success: function (data) {
+            	        	        	$(".right_col").html(data);
+            	        				$(".right_col").show();
+            	        				manageDataTable('#gspDetailsTable');
+            	        				/*$('#gspDetailsTable').DataTable({
+            	        		         	"language": {
+            	        			             "emptyTable":"No data found",
+            	        			             "info": "Showing page _PAGE_ of _PAGES_",
+            	        			             "infoFiltered": "(filtered from _MAX_ total records)",
+            	        			             "lengthMenu": "Display _MENU_ records"
+            	        			         },
+            	        			         "fnDrawCallback": function(oSettings) {
+            	        			             if (10 >= oSettings.fnRecordsDisplay()) {
+            	        			                  $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+            	        			                  $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+            	        			                  $(oSettings.nTableWrapper).find('.dataTables_info').hide();
+            	        			                  $(oSettings.nTableWrapper).find('.dataTables_length').hide();
+            	        			             } else {
+            	        			                 $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+            	        			                 $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+            	        			                 $(oSettings.nTableWrapper).find('.dataTables_info').show();
+            	        			                 $(oSettings.nTableWrapper).find('.dataTables_length').show();
+            	        			             }
+            	        			         },
+            	        		     });*/
+            	        				clearSpinner();
+            	        	        },
+            	        	        error: function (result) {
+            	        	            console.log("Error");
+            	        	        }
+            	        	    });
+            	        	  });
+            	        		
+            	        		$('#addFinPeriodTable').DataTable();
+            	        		jQuery.support.cors = true;
+            	        		$(".addfinperiod").click(function() {
+            	        			displaySpinner();
+            	            		manageLeftMenuLinks("addfinperiod");
+            	            		setContentHeight();
+            	    			$.ajax({
+            	    	            type: "GET",
+            	    	            contentType: "application/json; charset=utf-8",
+            	    	            url:"addFinPeriod",
+            	    	            success: function (data) {
+            	    	            	$(".right_col").html(data);
+            	    	    			$(".right_col").show();
+            	    	    			$("#addFinPeriodTable").DataTable({
+            	        					
+            	        					"language": {
+            	        			             "emptyTable":"No data found",
+            	        			             /* "info": "Showing page _PAGE_ of _PAGES_",
+            	        			             "infoFiltered": "(filtered from _MAX_ total records)",*/
+            	        			             "lengthMenu": "Display _MENU_ records"
+            	        			         },
+            	        					 length: 0,
+            	        					 "fnDrawCallback": function(oSettings) {
+            	        			             if (10 >= oSettings.fnRecordsDisplay()) {
+            	        			                 $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+            	        			                 $(oSettings.nTableWrapper).find('.dataTables_filter').hide();
+            	        			                 $(oSettings.nTableWrapper).find('.dataTables_info').hide();
+            	        			                 $(oSettings.nTableWrapper).find('.dataTables_length').hide();
+            	        			             } else {
+            	        			                 $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+            	        			                 $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+            	        			                 $(oSettings.nTableWrapper).find('.dataTables_info').show();
+            	        			                 $(oSettings.nTableWrapper).find('.dataTables_length').show();
+            	        			             }
+            	        			         },
+            	        				});
+            	    	    			clearSpinner();
+            	    	            },
+            	    	            error: function (result) {
+            	    	                console.log("Error");
+            	    	            }
+            	    	        });
+            	    		  });
+            	        		
+            	        		//managetaxpayersids
+            	        		jQuery.support.cors = true;
+            	        		$(".managetaxpayersIds").click(function() {
+            	        			displaySpinner();
+            	            		manageLeftMenuLinks("managetaxpayersIds");
+            	            		setContentHeight();
+            	    			$.ajax({
+            	    	            type: "GET",
+            	    	            contentType: "application/json; charset=utf-8",
+            	    	            url:"gettaxpayeridsreturntype",
+            	    	            success: function (data) {
+            	    	            	$(".right_col").html(data);
+            	    	    			$(".right_col").show();
+            	    	    			$('#TaxPayerTable').DataTable({
+            	        					
+            	        					"language": {
+            	        			             "emptyTable":"No data found",
+            	        			             /* "info": "Showing page _PAGE_ of _PAGES_",
+            	        			             "infoFiltered": "(filtered from _MAX_ total records)",*/
+            	        			             "lengthMenu": "Display _MENU_ records"
+            	        			         },
+            	        					 length: 0,
+            	        					 "fnDrawCallback": function(oSettings) {
+            	        			             if (10 >= oSettings.fnRecordsDisplay()) {
+            	        			                 $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+            	        			                 $(oSettings.nTableWrapper).find('.dataTables_filter').hide();
+            	        			                 $(oSettings.nTableWrapper).find('.dataTables_info').hide();
+            	        			                 $(oSettings.nTableWrapper).find('.dataTables_length').hide();
+            	        			             } else {
+            	        			                 $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+            	        			                 $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+            	        			                 $(oSettings.nTableWrapper).find('.dataTables_info').show();
+            	        			                 $(oSettings.nTableWrapper).find('.dataTables_length').show();
+            	        			             }
+            	        			         },
+            	        				});
+            	    	    			clearSpinner();
+            	    	            },
+            	    	            error: function (result) {
+            	    	                console.log("Error");
+            	    	            }
+            	    	        });
+            	    		  });
+        	        		
+            
+            //start of Manage Orgnization
+        	$(".orgHomePage").click(function() {
+        		displaySpinner();
+        		manageLeftMenuLinks("orgHomePage");
+        		setContentHeight();
+        		$.ajax({
+        			url : "orgHomePage",
+        			type : "GET",
+        			contentType: "application/json; charset=utf-8",
+        			success : function(data) {
+        				$(".right_col").html(data).show();
+        				clearSpinner();
+        			},
+        			error : function(e) {
+        				console.log("ERROR: ", e);
+        			}
+        		});
+        	});//End of Manage Orgnization
+       //manage Orgnization table button
+        	$("#GetOrgTable tbody").on('click', 'tr',function() {
+                
+        		
+    		  if(! $('#GetOrgTable tbody tr td').hasClass('dataTables_empty')){
+    			  
+
+  	       		var isAnyRecordSelected = false;
+  	       		
+  	       		$("#GetOrgTable tbody tr").each(function(){
+  	       			if($(this).attr('class').indexOf('getorg-select') != -1 ){
+  	       				isAnyRecordSelected = true;
+  	       				return false;
+  	       			}
+  	       		});
+  	       		if(isAnyRecordSelected){
+  	       			if($(this).attr('class').indexOf('getorg-select') != -1){
+  	       				$(this).removeClass('getorg-select'); 
+  	       				$(this).addClass('getorg-deselected');
+  	       			}
+  	       			else{
+  	       				var elements = document.getElementsByClassName('select-removal');
+	    	       		    for (var i = 0; i < elements.length; i++) {
+	    	       		        $(elements[i]).removeClass('getorg-select');
+	    	       		       $("#getOrgDetailsTab").removeClass("getorg-submit-btn");
+	    	       		       $(elements[i]).addClass('getorg-deselected');
+	    	       		       $("#getOrgDetailsTab").addClass("getorg-submit-btn-disabled");
+	    	       		    }
+	    	       		    $(this).removeClass('getorg-deselected');
+	    	      				$(this).addClass('getorg-select'); 
+	    	      				
+  	       			}
+  	       		}else{
+      	       		$(this).addClass('getorg-select ');
+      	       		$(this).removeClass('getorg-deselected');
+  	       		}
+	       			
+      	    $("#getOrgDetailsTab").toggleClass("getorg-submit-btn getorg-submit-btn-disabled");
+      	       
+      	    if(!($(".getorg-submit-btn").is(':visible'))){   
+      	      $("#getOrgDetailsTab input[type='button']").attr("disabled", true);
+      	       }else{
+      	    	  $("#getOrgDetailsTab input[type='button']").attr("disabled", false);
+      	      }
+    		  }
+             	  });
+        	   //manage Organization table button
+        	
+        	$("#bussinesPlacetable tbody tr input[type=checkbox]").change(function() {
+        		mulBpIds=[];
+        		
+        		if(false == $(this).prop("checked")){ //if this item is unchecked
+        	        $("#main_checkbox").prop('checked', false); //change "select all" checked status to false
+        	    }
+        	    if ($('.sub_checkbox:checked').length == $('.sub_checkbox').length ){
+        	        $("#main_checkbox").prop('checked', true);
+        	    }
+        		
+        		var checkboxObj=$(this).find('input[type=checkbox]');
+        		console.log(checkboxObj+"=======><=======")
+        		$.each($("input[name='mulBpCheck']:checked"), function(){            
+    	    		mulBpIds.push($(this).val());
+                });
+        		console.log(mulBpIds);
+        		
+       		 //var mAd = $('#mad_'+markAsDelete).text();
+        	/*var isBPInActive = false;
+       		 var isAnyRecordSelected = false;
+   	       		$("#bussinesPlacetable tbody tr").each(function(){
+   	       			if($(this).attr('class').indexOf('getorg-select') != -1 ){
+   	       				isAnyRecordSelected = true;
+   	       				return false;
+   	       			}
+   	       		});*/
+   	       		/*if(isAnyRecordSelected){
+   	       			if($(this).attr('class').indexOf('getorg-select') != -1){
+   	       				$(this).removeClass('getorg-select'); 
+   	       				$(this).addClass('getorg-deselected');
+   	       			}
+   	       			else{
+   	       				var elements = document.getElementsByClassName('select-removal');
+     	       		    for (var i = 0; i < elements.length; i++) {
+     	       		        $(elements[i]).removeClass('getorg-select');
+     	       		       $("#getOrgDetailsTab").removeClass("getorg-submit-btn");
+     	       		       $(elements[i]).addClass('getorg-deselected');
+     	       		       $("#getOrgDetailsTab").addClass("getorg-submit-btn-disabled");
+     	       		    }
+     	       		    $(this).removeClass('getorg-deselected');
+     	      				$(this).addClass('getorg-select');
+     	      				checkboxObj.prop("checked",true);
+   	       			}
+   	       		}else{*/
+     	       		/*$(this).addClass('getorg-select ');
+     	       		$(this).removeClass('getorg-deselected');*/
+   	       		//}
+     	       		
+     	   // $("#getOrgDetailsTab").toggleClass("getorg-submit-btn getorg-submit-btn-disabled");
+     	    console.log($("#getOrgDetailsTab .disable_class_btn").attr("disabled"))
+     	    if($(".disable_class_btn").attr("disabled") != undefined){
+     	    	$(".disable_class_btn").removeAttr("disabled");
+   	    	  $(".dropdown button").removeAttr("disabled");
+   	    	  $("#getOrgDetailsTab").addClass("getorg-submit-btn");
+   	    	$("#getOrgDetailsTab").removeClass("getorg-submit-btn-disabled");
+     	    }else{
+     	    	$("#getOrgDetailsTab").addClass("getorg-submit-btn-disabled");
+       	    	$("#getOrgDetailsTab").removeClass("getorg-submit-btn")
+     	    }
+     	    
+     	    if(mulBpIds.length >1 || mulBpIds.length == 0){
+     	      $("#getOrgDetailsTab .disable_class_btn").attr("disabled", true);
+       	      $("#getOrgDetailsTab .dropdown button").attr("disabled", true);
+       	      $('#restoreBtn').attr('disabled','disabled');
+     	    }else{
+    	    	 if($("#mad_"+$(this).val()).text().trim() == 'No'){
+              		  $('#restoreBtn').removeAttr('disabled');
+         	       	}
+        	    	  $("#getOrgDetailsTab .disable_class_btn").attr("disabled", false);
+        	    	  $("#getOrgDetailsTab .dropdown button").attr("disabled", false);
+        	    	 
+        	      }
+     	    
+     	       
+     	   /* if(!($(".getorg-submit-btn").is(':visible')) || $('.sub_checkbox:checked').length > 1 ){   
+     	      $("#getOrgDetailsTab .disable_class_btn").attr("disabled", true);
+     	      $("#getOrgDetailsTab .dropdown button").attr("disabled", true);
+     	     $('#restoreBtn').attr('disabled','disabled');
+     	      
+     	      }else{
+     	    	 if($("#mad_"+$(this).val()).text().trim() == 'InActive'){
+           		  $('#restoreBtn').removeAttr('disabled');
+      	       	}
+     	    	  $("#getOrgDetailsTab .disable_class_btn").attr("disabled", false);
+     	    	  $("#getOrgDetailsTab .dropdown button").attr("disabled", false);
+     	    	 
+     	      }*/
+     	
+     	    if($('.sub_checkbox:checked').length != 0){
+     	    	 $(".up_bus_user").removeAttr("disabled");
+     	    	$(".add_user").removeAttr("disabled");
+     	    }else{
+     	    	$(".up_bus_user").attr("disabled","disabled");
+     	    	$(".add_user").attr("disabled","disabled");
+     	    	
+     	    }
+     	   
+     	 $("#mulBpIds").text(mulBpIds);
+   		  });
+        	
+        	$("#bpSettingTable tbody tr").click(function() {
+        		
+     	       		var isAnyRecordSelected = false;
+     	       	 if(! $('#bpSettingTable tbody tr td').hasClass('dataTables_empty')){ 		
+     	       		$("#bpSettingTable tbody tr").each(function(){
+     	       			if($(this).attr('class').indexOf('getorg-select') != -1 ){
+     	       				isAnyRecordSelected = true;
+     	       				return false;
+     	       			}
+     	       		});
+     	       		if(isAnyRecordSelected){
+     	       			if($(this).attr('class').indexOf('getorg-select') != -1){
+     	       				$(this).removeClass('getorg-select'); 
+     	       				$(this).addClass('getorg-deselected');
+     	       			}
+     	       			else{
+     	       				var elements = document.getElementsByClassName('select-removal');
+ 	    	       		    for (var i = 0; i < elements.length; i++) {
+ 	    	       		        $(elements[i]).removeClass('getorg-select');
+ 	    	       		       $("#getOrgDetailsTab").removeClass("getorg-submit-btn");
+ 	    	       		       $(elements[i]).addClass('getorg-deselected');
+ 	    	       		       $("#getOrgDetailsTab").addClass("getorg-submit-btn-disabled");
+ 	    	       		    }
+ 	    	       		    $(this).removeClass('getorg-deselected');
+ 	    	      				$(this).addClass('getorg-select'); 
+ 	    	      				
+     	       			}
+     	       		}else{
+         	       		$(this).addClass('getorg-select ');
+         	       		$(this).removeClass('getorg-deselected');
+     	       		}
+ 	       			
+         	    $("#getOrgDetailsTab").toggleClass("getorg-submit-btn getorg-submit-btn-disabled");
+         	       
+         	    if(!($(".getorg-submit-btn").is(':visible'))){   
+         	      $("#getOrgDetailsTab input[type='button']").attr("disabled", true);
+         	      }else
+         	    	  $("#getOrgDetailsTab input[type='button']").attr("disabled", false);
+     	       	 }
+              	  });
+        	
+        	$("#orgSettingTable tbody tr").click(function() {
+      	       		var isAnyRecordSelected = false;
+      	       		
+      	       	 if(! $('#orgSettingTable tbody tr td').hasClass('dataTables_empty')){
+      	       		$("#orgSettingTable tbody tr").each(function(){
+      	       			if($(this).attr('class').indexOf('getorg-select') != -1 ){
+      	       				isAnyRecordSelected = true;
+      	       				return false;
+      	       			}
+      	       		});
+      	       		if(isAnyRecordSelected){
+      	       			if($(this).attr('class').indexOf('getorg-select') != -1){
+      	       				$(this).removeClass('getorg-select'); 
+      	       				$(this).addClass('getorg-deselected');
+      	       			}
+      	       			else{
+      	       				var elements = document.getElementsByClassName('select-removal');
+  	    	       		    for (var i = 0; i < elements.length; i++) {
+  	    	       		        $(elements[i]).removeClass('getorg-select');
+  	    	       		       $("#getOrgDetailsTab").removeClass("getorg-submit-btn");
+  	    	       		       $(elements[i]).addClass('getorg-deselected');
+  	    	       		       $("#getOrgDetailsTab").addClass("getorg-submit-btn-disabled");
+  	    	       		    }
+  	    	       		    $(this).removeClass('getorg-deselected');
+  	    	      				$(this).addClass('getorg-select'); 
+  	    	      				
+      	       			}
+      	       		}else{
+          	       		$(this).addClass('getorg-select ');
+          	       		$(this).removeClass('getorg-deselected');
+      	       		}
+  	       			
+          	    $("#getOrgDetailsTab").toggleClass("getorg-submit-btn getorg-submit-btn-disabled");
+          	       
+          	    if(!($(".getorg-submit-btn").is(':visible'))){   
+          	      $("#getOrgDetailsTab input[type='button']").attr("disabled", true);
+          	      }else
+          	    	  $("#getOrgDetailsTab input[type='button']").attr("disabled", false);
+      	       	 }
+               	  });
+        	
+     	    
+        	$("#usersTable tbody tr").click(function() {
+        		
+			 if(! $('#usersTable tbody tr td').hasClass('dataTables_empty')){
+				 var isAnyRecordSelected = false;
+			  		
+			  		$("#usersTable tbody tr").each(function(){
+			  			if($(this).attr('class').indexOf('getorg-select') != -1 ){
+			  				isAnyRecordSelected = true;
+			  				return false;
+			  			}
+			  		});
+			  		if(isAnyRecordSelected){
+			  			if($(this).attr('class').indexOf('getorg-select') != -1){
+			  				$(this).removeClass('getorg-select'); 
+			  				$(this).addClass('getorg-deselected');
+			  			}
+			  			else{
+			  				var elements = document.getElementsByClassName('select-removal');
+				       		    for (var i = 0; i < elements.length; i++) {
+				       		        $(elements[i]).removeClass('getorg-select');
+				       		       $("#getOrgDetailsTab").removeClass("getorg-submit-btn");
+				       		       $(elements[i]).addClass('getorg-deselected');
+				       		       $("#getOrgDetailsTab").addClass("getorg-submit-btn-disabled");
+				       		    }
+				       		    $(this).removeClass('getorg-deselected');
+				      				$(this).addClass('getorg-select'); 
+				      				
+			  			}
+			  		}else{
+			      		$(this).addClass('getorg-select ');
+			      		$(this).removeClass('getorg-deselected');
+			  		}
+						
+			   $("#getOrgDetailsTab").toggleClass("getorg-submit-btn getorg-submit-btn-disabled");
+			      
+			   if(!($(".getorg-submit-btn").is(':visible'))){   
+			     $("#getOrgDetailsTab input[type='button']").attr("disabled", true);
+			     }else{
+			   	  $("#getOrgDetailsTab input[type='button']").attr("disabled", false);
+			     }
+			        			 
+			        		 }
+  	       		
+           	  });
+        	
+        	
+        	
+        	
+           });   
+   
+   
+      //start of Org Details
+    	function getOrgDetails(){
+    		
+    	    emailId=$('#emailId').val();
+    		if(emailId =="" || emailId ==" "){
+    			$('#orgmh_email_msg').text("Please enter valid E-mail id").css("color", "red");
+    			setTimeout(function(){  
+    				$('#orgmh_email_msg').text('');
+    			}, 5000);
+    			 document.getElementById("getOrganisationBtn").disabled = true;
+            	 $(".organisation-create").css("cursor","not-allowed");	
+    			return false;
+    		}
+    		var reg = /^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,4})$/;
+    		 if (!reg.test(emailId)){
+    			 $('#orgmh_email_msg').text("Please enter valid E-mail id").css("color", "red");
+    			 setTimeout(function(){  
+    					$('#orgmh_email_msg').text('');
+    				}, 5000);
+    			 document.getElementById("getOrganisationBtn").disabled = true;
+            	 $(".organisation-create").css("cursor","not-allowed");
+    		 return false; 
+    		}
+    		 displaySpinner();
+     		//var emailId=$('#emailId').val();
+    		console.log(emailId);
+    		commonAPICall("getOrganisationDetails?email="+emailId,"getOrgDetails");
+    		/*$.ajax({
+    	        type: "GET",
+    	        contentType: "application/json; charset=utf-8",
+    	        url:"getOrganisationDetails?email="+emailId,
+    	        success: function (data) {
+    	        	$(".right_col").html(data);
+    				$(".right_col").show();
+    				$('#GetOrgTable').DataTable({
+    					retrieve: true,responsive: true,columnDefs:[{"targets": [0],"visible": false,"searchable": false}],
+    					"language": {
+    		                "emptyTable": "No data found",
+    		                "info": "Showing page _PAGE_ of _PAGES_",
+    		             
+    		            },
+    		            "fnDrawCallback": function(oSettings) {
+    		                if (10 >= oSettings.fnRecordsDisplay()) {
+    		                    $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+    		                    $(oSettings.nTableWrapper).find('.dataTables_filter').hide();
+    		                    $(oSettings.nTableWrapper).find('.dataTables_info').hide();
+    		                    //$(oSettings.nTableWrapper).find('.dataTables_length').hide();
+    		                } else {
+    		                    $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+    		                    $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+    		                    $(oSettings.nTableWrapper).find('.dataTables_info').show();
+    		                    //  $(oSettings.nTableWrapper).find('.dataTables_length').show();
+    		                }
+    		                $(".select-removal").removeClass("getorg-select");
+		            		$(".select-removal").addClass("getorg-deselected");
+		            		$("#getOrgDetailsTab").addClass("getorg-submit-btn-disabled");
+		            		$("#getOrgDetailsTab").removeClass("getorg-submit-btn");
+    		            },
+    					
+    				});
+    				$(".organisation-create").removeAttr("disabled");
+    				 var errorMess = $(data).find("#usermessageid").val();
+    	             if(errorMess == 'UserNotExits'){
+    	            	 if(document.getElementById("getOrganisationBtn") != undefined){
+    	            		 document.getElementById("getOrganisationBtn").disabled = true;
+    	            		 $(".organisation-create").css("cursor","not-allowed");
+    	            	 }
+    	             }else{
+    				    $('#getOrganisationBtn').removeAttr('disabled');
+    	             }
+    				clearSpinner();
+    	        },
+    	        error: function (result) {
+    	        	clearSpinner();
+    	        }
+    	    });*/
+    		
+    	} //End of Org Details
+    	
+    	function getBussinessPlaces(orgId,userId){
+    		$.ajax({
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+               // url:"subUser",
+                success: function (data) {
+                	 $("#bpUploadsUsers").show();
+                	 $("#bpUploadsUsers").find('.modal-title-bpUploadsUsers').text('Upload File.');
+                	 $("#bpUploadsUsers").find(".modal-body-bpUploadsUsers").html(data);
+                },
+                error: function (result) {
+                    console.log("Error");
+                }
+            });
+    		
+    	}
+    	function getOrgId(IdIndex,orgName,cin,pan,stateId,address,zipCode,contact){
+    		
+    		index=$('#org-'+IdIndex).text();
+    		localStorage.setItem("orgId",index);
+    		document.getElementById('orgId').value = index;
+    		var orgName = $('#orgName-'+orgName).text();
+    		console.log("orgName :  "+orgName);
+    		var cin = $('#cin-'+cin).text();
+    		var pan = $('#pan-'+pan).text();
+    		var stateId = $('#stateId-'+stateId).val();
+    		var address = $('#addr-'+address).text();
+    		var zipCode = $('#zipcode-'+zipCode).text();
+    		var contact = $('#contact-'+contact).text();
+    		
+    		$("#editOrgDetails").find("#orgNameIs").val(orgName);
+    		document.getElementById('cinIs').value = cin;
+    		document.getElementById('panIs').value = pan;
+    		document.getElementById('stateIdIs').value = stateId;
+    		document.getElementById('addrIs').value = address;
+    		document.getElementById('zipcodeIs').value = zipCode;
+    		document.getElementById('contactIs').value = contact;
+    		}
+    	function getBpId(bpIdIndex,markAsDelete,bpName,bpLoc,bpCon,bpAddr,bpZpc,bpGs,bpTax,bpgstn,bpdor,bpstid,bpTincode){
+    		var values = new Array();
+    		$.each($("input[name='mulBpCheck']:checked").closest("td").siblings("td"),
+    		       function () {
+    		            values.push($(this).text());
+    		       });
+    		 bpindex = values[0];
+    		 document.getElementById('bpId').value = bpindex;
+   		     document.getElementById('orgId').value = index;
+   		     localStorage.setItem('orBpId', bpindex);
+   		     bpname = values[4];
+   		     localStorage.setItem('bpName', bpname);
+    		 document.getElementById('bpnameId').value = values[4];
+    		 document.getElementById('bplocId').value = values[5];
+    		 document.getElementById('bpconId').value = values[6];
+    		 document.getElementById('bpaddrId').value = values[8];
+    		 document.getElementById('bpzpcId').value = values[9];
+    		 document.getElementById('selectedStatus').value = values[10];
+    		 document.getElementById('taxpaidtypeId').value = values[1];
+    		 document.getElementById('bpgstin').value = values[7];
+    		 var subStringOfDor = values[2];
+    		 var subStringOfDorSplit = subStringOfDor.substring(0, 10);
+    		 document.getElementById('bpdor').value = subStringOfDorSplit;
+    		 var bpStateIdIs = values[14];
+    		 var tinCodeSatetId = values[3];
+    		 document.getElementById('bpstatevaltincode').value =  values[3]+"-"+values[14];
+    		 localStorage.setItem('bpStateId', bpStateIdIs);
+    		 localStorage.setItem('bpStateTinId', tinCodeSatetId);
+    		}
+    	function getAllBplaces(){
+    		displaySpinner();
+    		var org_id = index;
+    		commonAPICall("getBplaces/"+org_id,"getAllBplaces")    		
+    		/* $.ajax({
+    	         type: "GET",
+    	         url : "getBplaces/"+org_id,
+    	         success: function (data) {
+    	        	$(".right_col").html(data);
+    	 			$(".right_col").show();
+    	 			$('#bussinesPlacetable').DataTable({
+    	 				retrieve: true,responsive: true,
+    	 				 columnDefs: [ {
+                             "targets": [0],
+                            "orderable": false
+                       } ],
+                       "language": {
+   		                "emptyTable": "No data found",
+   		                "info": "Showing page _PAGE_ of _PAGES_",
+   		                "infoFiltered": "(filtered from _MAX_ total records)"
+   		            },
+   		            "fnDrawCallback": function(oSettings) {
+   		                if (10 >= oSettings.fnRecordsDisplay()) {
+   		                    $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+   		                    $(oSettings.nTableWrapper).find('.dataTables_filter').hide();
+   		                    $(oSettings.nTableWrapper).find('.dataTables_info').hide();
+   		                    $(oSettings.nTableWrapper).find('.dataTables_length').hide();
+   		                } else {
+   		                    $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+   		                   // $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+   		                    $(oSettings.nTableWrapper).find('.dataTables_info').show();
+   		                    //  $(oSettings.nTableWrapper).find('.dataTables_length').show();
+   		                }
+   		             $(".select-removal").removeClass("getorg-select");
+	            		$(".select-removal").addClass("getorg-deselected");
+	            		$("#getOrgDetailsTab").addClass("getorg-submit-btn-disabled");
+	            		$("#getOrgDetailsTab").removeClass("getorg-submit-btn");
+   		            },
+                       
+    	 			});	
+    	 			clearSpinner();
+    	 			$(".modal-backdrop").hide()
+    	         },
+    	         error: function (result) {
+    	        	 clearSpinner();
+    	        	 $(".modal-backdrop").hide()
+    	         }
+    	 });*/
+    	}
+    	function resetUserSession(sessionResetAuthID){
+    		$.ajax({
+                type: "DELETE",
+                url:"resetUserSession?resetTokenID="+sessionResetAuthID+"&_csrf="+$('#csrfToken').val(),
+                cache:false,
+                processData:false,
+                contentType:false,
+                async:false,
+                success: function (data) {
+                		console.log(data);
+                		if(data.indexOf("successfully") != -1){
+                			 messageCenter('success',data);
+                			 $(".getonlinecust").click();
+                		}else{
+                			 messageCenter('error',data);
+                		}
+                },
+                error: function (result) {
+                	 messageCenter('error','Some error occured, please try again later');
+                }
+            });
+    	}
+    	function getAllBpUsers(){
+    		displaySpinner();
+    		var org_id = index;
+    		commonAPICall("getBpUsers/"+org_id,"getAllBpUsers");
+    		/* $.ajax({
+    	         type: "GET",
+    	         url : "getBpUsers/"+org_id,
+    	         success: function (data) {
+    	        	$('.modal-backdrop').hide();
+    	        	$(".right_col").html(data);
+    	 			$(".right_col").show();
+    	 			$('#usersTable').DataTable({
+    	 				"language": {
+    		                "emptyTable": "No data found",
+    		                "info": "Showing page _PAGE_ of _PAGES_",
+    		                "infoFiltered": "(filtered from _MAX_ total records)"
+    		            },
+    		            "fnDrawCallback": function(oSettings) {
+    		            	
+    		                if (10 >= oSettings.fnRecordsDisplay()) {
+    		                    $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+    		                    $(oSettings.nTableWrapper).find('.dataTables_filter').hide();
+    		                    $(oSettings.nTableWrapper).find('.dataTables_info').hide();
+    		                    //$(oSettings.nTableWrapper).find('.dataTables_length').hide();
+    		                } else {
+    		                    $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+    		                    $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+    		                    $(oSettings.nTableWrapper).find('.dataTables_info').show();
+    		                    //  $(oSettings.nTableWrapper).find('.dataTables_length').show();
+    		                }
+    		            	
+    		            		$(".select-removal").removeClass("getorg-select");
+    		            		$(".select-removal").addClass("getorg-deselected");
+    		            		$("#getOrgDetailsTab").addClass("getorg-submit-btn-disabled");
+    		            		$("#getOrgDetailsTab").removeClass("getorg-submit-btn");
+    		            	
+    		            },
+    	 			});
+    	 			
+    	 			clearSpinner();
+    	         },
+    	         error: function (result) {
+    	        		clearSpinner();
+    	         }
+    	 });*/
+    	}
+    	function clearPopContent(id){
+    		//$("#"+id).reset();
+    		displaySpinner();
+    		document.getElementById(id).reset();
+    		clearSpinner();
+    	}
+    	function updateOrgDetails(){
+    		var userEmail=emailId;
+    		
+    		var orgName = $("#editOrgDetails").find("#orgNameIs").val();
+    		 isEmpty(orgName);
+    		var pan = $('#panIs').val();
+    		 isEmpty(pan);
+    		var org_mobile = $('#contactIs').val();
+    		 isEmpty(org_mobile);
+    		var org_address1 = $('#addrIs').val();
+    		 isEmpty(org_address1);
+    		var org_state = $('#stateIdIs').val();
+    		 isEmpty(org_state);
+    		var org_pincode = $('#zipcodeIs').val();
+    		 isEmpty(org_pincode);
+    		 var cin = $('#cinIs').val();
+    		 isEmpty(cin);
+    		if(orgName == false || pan == false || org_mobile == false || org_state == false || org_pincode == false || org_address1 == false){
+    			return displayEditOrgErrorMessages(orgName,pan,org_mobile,org_address1,org_state,org_pincode);
+    		}else{
+    			if(pan != ""){
+    				 var pattern = /[A-Za-z]{5}\d{4}[A-Za-z]{1}/g;
+    				if(pan.length !=10 || !pattern.test(pan)){
+    					$("#error_pan_is").text("Please enter valid PAN").css("color", "red");
+    					   setTimeout(function(){  
+    							$('#error_pan_is').text('');
+    						}, 5000);
+    				}
+    				if($("#error_pan_is").text() != ''){
+    					return false;
+    				}
+    			}
+    			
+    			if(org_pincode != ""){
+    				checkPicode(org_pincode,"error_org_pincode_is");
+    				if($("#error_org_pincode_is").text() != ''){
+    					return false;
+    				}
+    			}
+    			/*if(orgName != ""){
+    				var regex = /^[ A-Za-z0-9_-]*$/;
+    				 if (!regex.test(orgName)){
+    					 $('#error_org_name_is').text("Please enter Organization name").css("color", "red");
+    						setTimeout(function(){  
+    							$('#error_org_name_is').text('');
+    						}, 5000);
+    						return false;
+    				 }
+    			}*/
+    			if(org_mobile != ""){
+    				var regex = /^\d{10}$/;
+    				 if (!regex.test(org_mobile)){
+    					 $('#error_org_mobile_is').text("Please enter valid mobile number").css("color", "red");
+    						setTimeout(function(){  
+    							$('#error_org_mobile_is').text('');
+    						}, 5000);
+    						return false;
+    				 }
+    			}
+    			if(cin != ""){
+    				var pattern = /[L/U]{1}\d{5}[A-Za-z]{2}\d{4}[P/T/C/L]{3}\d{6}/g;	
+    				if (!pattern.test(cin) || cin.length !=21){
+    					 $('#error_cin_is').text("Please enter valid CIN").css("color", "red");
+    						setTimeout(function(){  
+    							$('#error_cin_is').text('');
+    						}, 5000);
+    						return false;
+    				 }
+    			}
+    			
+    		}
+    		var org_id = index;
+    		displaySpinner();
+    		 $.ajax({
+    	         type: "GET",
+    	         url : "editorgdet/"+org_id+"?"+$('#editOrgDetails').serialize()+"&Uemail="+userEmail+"&activity="+localStorage.getItem("activity"),
+    	         success: function (data) {
+    	        	 messageCenter('success','You have updated the selected organization details');
+    	        	 $(".right_col").html(data);
+     	 			 $(".right_col").show();
+     	 		
+     	 			 $("#emailId").val(userEmail);
+     	 			 
+     	 			 $("#getOrgDetails").click();
+     	 			$('#editOrganisation').hide();
+   	        	    $('.modal-backdrop').hide();
+   	        	    document.getElementById("getOrganisationBtn").disabled = false;
+     	 			 clearSpinner();
+    	         },
+    	         error: function (result) {
+    	        	 messageCenter('error','Some error occured, please try again later');
+    	         }
+    	 });
+    	}
+    	function updateBpDetails(){
+    		var orgName = $('#bpnameId').val();
+   		    isEmpty(orgName);
+   		    var org_mobile = $('#bpconId').val();
+   		    isEmpty(org_mobile);
+   		    var org_address1 = $('#bpaddrId').val();
+   		    isEmpty(org_address1);
+   		    var org_pincode = $('#bpzpcId').val();
+   		    isEmpty(org_pincode);
+   		    var location = $('#bplocId').val();
+		    isEmpty(location);
+		    var gstiNumber = $('#bpgstin').val();
+		    isEmpty(location);
+		    var dor = $('#bpdor').val();
+		    isEmpty(location);
+		    var stateofbp = $('#bpstatevaltincode').val();
+		    var status = $('#selectedStatus').val();
+		    var subtinCode = stateofbp.substring(0,2);
+		    var subStr = gstiNumber.substring(0,2);
+   		   if(orgName == false || org_mobile == false || org_pincode == false || org_address1 == false || location == false || gstiNumber == false || dor == false || stateofbp == false ){
+ 			return displayEditBpErrorMessages(orgName,org_mobile,org_address1,org_pincode,location,gstiNumber,dor,stateofbp);
+ 		   }else{
+ 			if(org_pincode != ""){
+ 				checkPicode(org_pincode,"error_org_pincode_is");
+ 				if($("#error_org_pincode_is").text() != ''){
+ 					return false;
+ 				}
+ 			}
+ 			if(gstiNumber != ""){
+ 				var pattern=/\d{2}[A-Z]{5}\d{4}[A-Z]{1}\d[Z]{1}[A-Z\d]{1}/;
+ 				if(gstiNumber.length !=15 || !pattern.test(gstiNumber)){
+ 					$("#error_org_gstin1").text("Please enter a valid GSTIN").css("color", "red");
+ 					   setTimeout(function(){  
+ 							$('#error_org_gstin1').text('');
+ 						}, 5000);
+ 					  return false;
+ 				}
+ 			}
+ 			if(subStr != "" && subtinCode != ""){
+ 				if(subStr != subtinCode){
+ 					$('#error_org_bpstate_is').text("State must be related to GSTIN provided").css("color", "red");
+ 					setTimeout(function(){  
+ 						$('#error_org_bpstate_is').text('');
+ 					}, 5000);
+ 					return false;
+ 			    }
+ 			}
+ 		}
+    		var orgBpId = bpindex;
+    		var orgId = index;
+    		displaySpinner();
+    		 $.ajax({
+    	         type: "GET",
+    	         url : "editbpdet/"+orgBpId+"?"+$('#editbussinessBplace').serialize()+"&"+"orgId="+index+"&activity="+localStorage.getItem("activity")+"&status="+status,
+    	         success: function (data) {
+    	        	 messageCenter('success','You have updated the selected busines place details');
+    	        	 $('#editBplaces').hide();
+    	        	 $('.modal-backdrop').hide();
+    	        	 $(".right_col").html(data);
+     	 			 $('#bussinesPlacetable').DataTable();
+     	 			clearSpinner();
+    	         },
+    	         error: function (result) {
+    	        	 messageCenter('error','Some error occured, please try again later');
+    	        	 clearSpinner();
+    	         }
+    	 });
+    	}
+    	
+    	function restoreBP(ticket,email){
+    		 var orgBpid = bpindex;
+    		 displaySpinner();
+    		 $.ajax({
+    	         type: "GET",
+    	         url : "restorebp/"+orgBpid+"?"+"organisationId="+index+"&"+"ticket="+ticket+"&email="+email+"&module=module_restore_business",
+    	         success: function (data) {
+    	        	 $('#usersTable').DataTable({
+    	 				"language": {
+    		                "emptyTable": "No data found",
+    		                "info": "Showing page _PAGE_ of _PAGES_",
+    		                "infoFiltered": "(filtered from _MAX_ total records)"
+    		            },
+    		            "fnDrawCallback": function(oSettings) {
+    		                if (10 >= oSettings.fnRecordsDisplay()) {
+    		                    $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+    		                    $(oSettings.nTableWrapper).find('.dataTables_filter').hide();
+    		                    $(oSettings.nTableWrapper).find('.dataTables_info').hide();
+    		                    //$(oSettings.nTableWrapper).find('.dataTables_length').hide();
+    		                } else {
+    		                    $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+    		                    $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+    		                    $(oSettings.nTableWrapper).find('.dataTables_info').show();
+    		                    //  $(oSettings.nTableWrapper).find('.dataTables_length').show();
+    		                }
+    		                $(".select-removal").removeClass("getorg-select");
+		            		$(".select-removal").addClass("getorg-deselected");
+		            		$("#getOrgDetailsTab").addClass("getorg-submit-btn-disabled");
+		            		$("#getOrgDetailsTab").removeClass("getorg-submit-btn");
+    		            },
+    	 			});
+    	        	messageCenter('success','Succesfully restored business place');
+     	        	$(".right_col").html(data);
+     	        	$('#bussinesPlacetable').DataTable();
+     	 			clearSpinner();
+    	         },
+    	         error: function (result) {
+    	        	 messageCenter('error','Some error occured, please try again later');
+    	        	 clearSpinner();
+    	         }
+    	 });
+    	}
+    	function getOrgPopup(ticket,email){
+    		displaySpinner();
+    		$(".organisation-create-1").click();
+    		$.ajax({
+		        type: "GET",
+		        contentType: "application/json; charset=utf-8",
+		        url:"manageCreateOrganization/"+emailId+"?"+"ticket="+ticket+"&email="+email+"&module=module_create_organisation",
+		        success: function (data) {
+		        	$('#emailOrgId').val();
+		        	$('#sub_user_email_id').text($('#emailOrgId').val());
+		        	$('#save_user_det_2').click();
+					$("#createOrganization").find('.modal-title-organization').text('Create Organization');
+					$("#createOrganization").find(".organization-body").html(data);
+					localStorage.setItem("user_mail",emailId);
+					$("#orgmgmt_Email").show();
+					$("#back_org_det").hide();
+					$('#next_uc_det').hide();$("#back_bus_det").hide();
+					$('#next_fin_det').hide();$("#back_uc_det").hide();
+					$('#next_org_det').show();
+					$('#save_org_bus_uc_fin').hide();
+					$('#creOrgBtn').hide();
+					clearSpinner();
+					
+		        },
+		        error: function (result) {
+		        	messageCenter('error','Some error occured, please try again later');
+		        	clearSpinner();
+		        }
+		    });
+    	}
+    	function getBPSettings(){
+    		displaySpinner();
+    		 var orgBpid = bpindex;
+       		 $.ajax({
+       	         type: "GET",
+       	         url : "getBPSetting/"+orgBpid,
+       	         success: function (data) {
+       	        	$(".right_col").html(data);
+    	 			$(".right_col").show();
+    	 			$("#bpSettingTable").DataTable({
+    	 				"retrieve": true
+    	 			});
+    	 			clearSpinner();
+       	         },
+       	         error: function (result) {
+       	        	 messageCenter('error','Some error occured, please try again later');
+       	        	 clearSpinner();
+       	         }
+       	 });
+    	}
+    	function getOrgSettings(){
+    		displaySpinner();
+   		 var orgid = index;
+      		 $.ajax({
+      	         type: "GET",
+      	         url : "getOrgSetting/"+orgid,
+      	         success: function (data) {
+      	        	$(".right_col").html(data);
+   	 			    $(".right_col").show();
+   	 			    $("#orgSettingTable").DataTable();
+   	 			    clearSpinner();
+      	         },
+      	         error: function (result) {
+      	        	 messageCenter('error','Some error occured, please try again later');
+      	        	 clearSpinner();
+      	         }
+      	 });
+   	}
+    function getCreateOrgEmail(){
+    	orgCreateEmail = $('#emailOrgId').val();
+    	localStorage.setItem('orgCreateEmailId', orgCreateEmail);
+    }
+    function changeApplSetVal(applSetId,applSetVal){
+    	 applId = $('#applSetId-'+applSetId).text();
+    }
+    function changeApplSetValSet(setval){
+    	applVal = $('#applSetValTrueFalse-'+setval).val();
+    }
+    function changeBpSettingVal(setVal){
+       applVal = $('#applSetValid-'+setVal).val();
+    }
+   function updateBpSettingValue(ticket,email){
+		displaySpinner();
+		 $.ajax({
+	         type: "GET",
+	         url: "updateApplSettings/"+applId+"?"+"settingVal="+applVal+"&"+"ticket="+ticket+"&email="+email+"&module=module_edit_orgBpSetting", 
+	         success: function (data) {
+	        	 messageCenter('success','Updated Succesfully');
+	 			 clearSpinner();
+	         },
+	         error: function (result) {
+	        	 messageCenter('error','Some error occured, please try again later');
+	        	 clearSpinner();
+	         }
+	 });
+   }
+   function resetPassword(){
+	   displaySpinner();
+		 $.ajax({
+	         type: "GET",
+	         url: "resetPassword/"+userId, 
+	         success: function (data) {
+	        	 if(data.response.indexOf('200') != -1){
+	        		 messageCenter('success','An E-mail has been sent to your registered address');	
+	        	 }else{
+	        		 messageCenter('error','Some error occured, please try again later');
+	        	 }
+	        	 
+	 			 clearSpinner();
+	         },
+	         error: function (result) {
+	        	 messageCenter('error','Some error occured, please try again later');
+	        	 clearSpinner();
+	         }
+	 });
+   }
+   function getUserDet(id,relId,orgUsrBpId,loginId,firstname,lastname,bPlace,role,roleId,userMob){
+	    userId=$('#user-'+id).text();
+	    logonId=$('#user-email-'+id).text();
+	    orgUserBpId=$('#userBpId-'+orgUsrBpId).text();
+	    role_Id = $('#roleId-'+roleId).text();
+	    var getLogin = $('#user-email-'+loginId).text();
+	    var getFirstname = $('#firstName-'+firstname).text();
+	    var getLastname = $('#lastName-'+lastname).text();
+	    var getbPlace = $('#BpName-'+bPlace).text();
+	    var getRole = $('#role-'+role).text();
+	    var uMob = $('#userMob-'+userMob).text();
+	    document.getElementById('getLogin').value = getLogin;
+		document.getElementById('getFirstname').value = getFirstname;
+		document.getElementById('getLastname').value = getLastname;
+		document.getElementById('getbPlace').value = getbPlace;
+		document.getElementById('getRole').value = role_Id;
+		document.getElementById('UMobId').value = uMob;
+   }
+   function deleteBpUser(ticket,email){
+		 displaySpinner();
+		 $.ajax({
+	         type: "GET",
+	         url : "deleteBpUser/"+userId+"?"+"orgId="+index+"&"+"orgUsrBpId="+orgUserBpId+"&"+"ticket="+ticket+"&email="+email+"&module=module_delete_org_details",
+	         success: function (data) {
+	        	 messageCenter('success','User deleted succesfully');
+	        	 $(".right_col").html(data);
+	        	 $('#usersTable').DataTable({
+ 	 				"language": {
+		                "emptyTable": "No data found",
+		                "info": "Showing page _PAGE_ of _PAGES_",
+		                "infoFiltered": "(filtered from _MAX_ total records)"
+		            },
+		            "fnDrawCallback": function(oSettings) {
+		                if (10 >= oSettings.fnRecordsDisplay()) {
+		                    $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+		                    $(oSettings.nTableWrapper).find('.dataTables_filter').hide();
+		                    $(oSettings.nTableWrapper).find('.dataTables_info').hide();
+		                    //$(oSettings.nTableWrapper).find('.dataTables_length').hide();
+		                } else {
+		                    $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+		                    $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+		                    $(oSettings.nTableWrapper).find('.dataTables_info').show();
+		                    //  $(oSettings.nTableWrapper).find('.dataTables_length').show();
+		                }
+		                $(".select-removal").removeClass("getorg-select");
+	            		$(".select-removal").addClass("getorg-deselected");
+	            		$("#getOrgDetailsTab").addClass("getorg-submit-btn-disabled");
+	            		$("#getOrgDetailsTab").removeClass("getorg-submit-btn");
+		               
+		            },
+	 			});
+	        	 clearSpinner();
+	         },
+	         error: function (result) {
+	        	 messageCenter('error','Some error occured, please try again later');
+	        	 clearSpinner();
+	         }
+	 });
+	}
+   function getPrevOrgDetails(){
+	   displaySpinner();
+		$.ajax({
+	        type: "GET",
+	        contentType: "application/json; charset=utf-8",
+	        url:"getOrganisationDetails?email="+emailId,
+	        success: function (data) {
+	        	$('.modal-backdrop').hide();
+	        	$(".right_col").html(data);
+				$(".right_col").show();
+				$('#GetOrgTable').DataTable({
+					retrieve: true,responsive: true,columnDefs:[{"targets": [0],"visible": false,"searchable": false}],
+					"language": {
+		                "emptyTable": "No data found",
+		                "info": "Showing page _PAGE_ of _PAGES_",
+		                
+		            },
+		            "fnDrawCallback": function(oSettings) {
+		                if (10 >= oSettings.fnRecordsDisplay()) {
+		                    $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+		                    $(oSettings.nTableWrapper).find('.dataTables_filter').hide();
+		                    $(oSettings.nTableWrapper).find('.dataTables_info').hide();
+		                    //$(oSettings.nTableWrapper).find('.dataTables_length').hide();
+		                } else {
+		                    $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+		                    $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+		                    $(oSettings.nTableWrapper).find('.dataTables_info').show();
+		                    //  $(oSettings.nTableWrapper).find('.dataTables_length').show();
+		                }
+		               /* $(".select-removal").removeClass("getorg-select");
+	            		$(".select-removal").addClass("getorg-deselected");
+	            		$("#getOrgDetailsTab").addClass("getorg-submit-btn-disabled");
+	            		$("#getOrgDetailsTab").removeClass("getorg-submit-btn");*/
+		            },
+				});
+				 var errorMess = $(data).find("#usermessageid").val();
+	             if(errorMess == 'UserNotExits'){
+	            	 if(document.getElementById("getOrganisationBtn") != undefined){
+	            		 document.getElementById("getOrganisationBtn").disabled = true;
+	            		 $(".organisation-create").css("cursor","not-allowed");
+	            		 $('.organisation-create').click(false);
+	            	 }
+	             }else{
+				    $('#getOrganisationBtn').removeAttr('disabled');
+	             }
+				$(".organisation-create").removeAttr("disabled");
+				clearSpinner();
+	        },
+	        error: function (result) {
+	            console.log("Error");
+	            clearSpinner();
+	        }
+	    });
+   }
+   function getPrevBpDetails(){
+	   displaySpinner();
+	   var org_id = index;
+		 $.ajax({
+	         type: "GET",
+	         url : "getBplaces/"+org_id,
+	         success: function (data) {
+	        	$(".right_col").html(data);
+	 			$(".right_col").show();
+	 			$('#bussinesPlacetable').DataTable();
+	 			clearSpinner();
+	         },
+	         error: function (result) {
+	            clearSpinner();
+	         }
+	 });
+  }
+	   
+   function getLoginHistoryOfuser(){
+	   displaySpinner();
+		 $.ajax({
+	         type: "GET",
+	         url: "getLoginHistoryOfuser/"+logonId,
+	         success: function (data) {
+	        	 $("#showHsty").show();
+	 			$("#showHsty").find('.modal-title-subscription').text('Login History');
+	 			$("#showHsty").find(".logHstry-body").html(data);
+	 			manageDataTable('#logonHstyTable');
+	 			$("#logonHstyTable_paginate").css("margin-top","-28px")
+	        		 clearSpinner();
+	         },
+	         error: function (result) {
+	        	 messageCenter('error','Some error occured, please try again later');
+	        	 clearSpinner();
+	         }
+	 });
+	   
+   }
+   $('#bulk_user').click(function(){
+		var file_upload=$('#upload_file_bp').val();
+		/* displaySpinner();*/
+		if(file_upload == '' || file_upload == ' '){
+			$('#error_msg_file_sub').text('Please choose file').css({"color":"red","margin-left":"10px"});
+			setTimeout(function(){  
+				$('#error_msg_file_sub').text('');
+			}, 5000);
+			/*clearSpinner();*/
+			return false;
+		}else{
+			if (file_upload.indexOf("csv") > 0 || file_upload.indexOf("csv") > 0) {
+				/*displaySpinner();*/
+            }
+            else {
+            	$('#error_msg_file_sub').text('Please upload csv file').css({"color":"red","margin-left":"10px"});
+            	setTimeout(function(){  
+    				$('#error_msg_file_sub').text('');
+    			}, 5000);
+            	/*clearSpinner();*/
+    			return false;
+  
+            }
+		}
+	});
+   $('#user_btn').click(function(){
+		var file_upload=$('#upload_file_user').val();
+		/*displaySpinner();*/
+		if(file_upload == '' || file_upload == ' '){
+			$('#error_msg_file_user').text('Please choose file').css({"color":"red","margin-left":"10px"});
+			setTimeout(function(){  
+				$('#error_msg_file_user').text('');
+			}, 5000);
+			/*clearSpinner();*/
+			return false;
+		}else{
+			if (file_upload.indexOf("csv") > 0 || file_upload.indexOf("csv") > 0) {
+				/*displaySpinner();*/
+            }
+            else {
+            	$('#error_msg_file_user').text('Please upload csv file').css({"color":"red","margin-left":"10px"});
+            	setTimeout(function(){  
+    				$('#error_msg_file_user').text('');
+    			}, 5000);
+            	/*clearSpinner();*/
+    			return false;
+  
+            }
+		}
+	});
+   
+   
+   
+   function displayJobErrorMessages(jobName,jobType,finPeriod,status){
+	   var flag=true;
+	   
+	   if(jobName.length ==0){
+			$('#error_jobName').text("Please enter valid job name").css("color", "red");
+			setTimeout(function(){  
+				$('#error_jobName').text('');
+			}, 5000);
+			flag=false;
+		}
+	   
+	   if(jobType.length ==0){
+			$('#error_jobType').text("Please select job type").css("color", "red");
+			setTimeout(function(){  
+				$('#error_jobType').text('');
+			}, 5000);
+			flag=false;
+		}
+	   
+	  /* if(docCatId.length ==0){
+			$('#error_docCatId').text("Please select valid doc category").css("color", "red");
+			setTimeout(function(){  
+				$('#error_docCatId').text('');
+			}, 5000);
+			flag=false;
+		}*/
+	   
+	   if(finPeriod.length ==0){
+			$('#error_finPeriod').text("Please select valid financial period").css("color", "red");
+			setTimeout(function(){  
+				$('#error_finPeriod').text('');
+			}, 5000);
+			flag=false;
+		}
+	   
+	   if(status.length ==0){
+			$('#error_status').text("Please select valid status").css("color", "red");
+			setTimeout(function(){  
+				$('#error_status').text('');
+			}, 5000);
+			flag=false;
+		}
+	   if(!flag){
+			return false;
+		}
+	   
+   }
+   
+   function saveJobs(){
+	   var rawJson = $("#rowJsonData").val();
+	   if(!isNaN(rawJson) || rawJson.charAt(0) == '"'){
+		   rawJson = "{"+rawJson;
+	   }
+	   console.log(rawJson)
+	   var jobName = $("#jobName").val().trim();
+	   var jobType = $("#jobType").val().trim();
+	   var docCatId = $("#docCatId").val().trim();
+	   var finPeriod = $("#finPeriod").val().trim();
+	   var status = $("#status").val().trim();
+	   
+	   if(jobName.length ==0 || jobType.length ==0 || finPeriod.length ==0 || status.length ==0  ){
+		   return displayJobErrorMessages(jobName,jobType,finPeriod,status);
+	   }
+	   try{
+		   $("#jjson").jJsonViewer(rawJson);
+		   JSON.parse(rawJson);
+	   }catch(error){}
+	   
+	   $(".jjson-error").show();
+	   setTimeout(function(){  
+		   $(".jjson-error").hide();
+		}, 5000);
+	   var value=$(".jjson-error").text();
+	   if(value.length !=0){
+		   $('#error_parameter').text("Please enter valid job parameter").css("color", "red");
+			setTimeout(function(){  
+				$('#error_parameter').text('');
+			}, 5000);
+		   return false;
+		   
+	   }
+	  
+	   $(".jjson-container").hide();
+	   displaySpinner();
+		 $.ajax({
+	         type: "GET",
+	         url: "saveJobs?"+ $('#add-bg-job_form').serialize(),
+	         success: function (data) {
+	        	 console.log(data)
+	        	 if(data == "200"){
+	        		 messageCenter('success','A job is successfully added');
+	        		 $('.close').click();
+	        		 getBgJob();
+		        	 clearSpinner();
+	        	 }
+	        	 if(data == "error"){
+	        		 messageCenter('error','Some error occured, please try again later');
+		        	 clearSpinner();
+	        	 }
+	         },
+	         error: function (result) {
+	        	 messageCenter('error','Some error occured, please try again later');
+	        	 clearSpinner();
+	         }
+	 });
+   }
+   
+   
+  
+   
+   function displayEditOrgErrorMessages(orgName,pan,org_mobile,org_address1,org_state,org_pincode){
+		var flag=true;
+		if(orgName == " " || orgName == ""){
+			$('#error_org_name_is').text("Please enter valid organization name").css("color", "red");
+			setTimeout(function(){  
+				$('#error_org_name_is').text('');
+			}, 5000);
+			flag=false;
+		}
+		if(pan == " " || pan == ""){
+			$('#error_pan_is').text("Please enter valid  PAN").css("color", "red");
+			setTimeout(function(){  
+				$('#error_pan_is').text('');
+			}, 5000);
+			flag=false;
+		}
+		if(org_address1 == " " || org_address1 == ""){
+			$('#error_org_address1').text("Please enter valid address").css("color", "red");
+			setTimeout(function(){  
+				$('#error_org_address1').text('');
+			}, 5000);
+			flag=false;
+		}
+		if(org_state == " " || org_state == ""){
+			$('#error_org_state_is').text("Please select valid state").css("color", "red");
+			setTimeout(function(){  
+				$('#error_org_state_is').text('');
+			}, 5000);
+			flag=false;
+		}	
+		if(org_pincode == " " || org_pincode == ""){
+			$('#error_org_pincode_is').text("Please enter valid Pincode").css("color", "red");
+			setTimeout(function(){  
+				$('#error_org_pincode_is').text('');
+			}, 5000);
+			flag=false;
+		}
+		if(org_mobile == " " || org_mobile == ""){
+			$('#error_org_mobile_is').text("Please enter valid mobile number").css("color", "red");
+			setTimeout(function(){  
+				$('#error_org_mobile_is').text('');
+			}, 5000);
+			flag=false;
+		}
+		return flag;
+	}
+   
+   function displayEditBpErrorMessages(orgName,org_mobile,org_address1,org_pincode,location,gstiNumber,dor,stateofbp){
+		var flag=true;
+		if(orgName == " " || orgName == ""){
+			$('#error_bp_name_is').text("Please enter valid business place name").css("color", "red");
+			setTimeout(function(){  
+				$('#error_bp_name_is').text('');
+			}, 5000);
+			flag=false;
+		}
+		if(gstiNumber == " " || gstiNumber == ""){
+			$('#error_org_gstin1').text("Please enter valid GSTIN number").css("color", "red");
+			setTimeout(function(){  
+				$('#error_org_gstin1').text('');
+			}, 5000);
+			flag=false;
+		}
+		if(dor == " " || dor == ""){
+			$('#error_org_dor').text("Please select valid date of registration").css("color", "red");
+			setTimeout(function(){  
+				$('#error_org_dor').text('');
+			}, 5000);
+			flag=false;
+		}
+		if(stateofbp == " " || stateofbp == ""){
+			$('#error_org_bpstate_is').text("Please select valid state").css("color", "red");
+			setTimeout(function(){  
+				$('#error_org_bpstate_is').text('');
+			}, 5000);
+			flag=false;
+		}
+		if(org_address1 == " " || org_address1 == ""){
+			$('#error_org_address1').text("Please enter valid address").css("color", "red");
+			setTimeout(function(){  
+				$('#error_org_address1').text('');
+			}, 5000);
+			flag=false;
+		}
+		if(location == " " || location == ""){
+			$('#error_location_is').text("Please enter valid location").css("color", "red");
+			setTimeout(function(){  
+				$('#error_location_is').text('');
+			}, 5000);
+			flag=false;
+		}
+		if(org_pincode == " " || org_pincode == ""){
+			$('#error_org_pincode_is').text("Please enter valid PINCODE").css("color", "red");
+			setTimeout(function(){  
+				$('#error_org_pincode_is').text('');
+			}, 5000);
+			flag=false;
+		}
+		if(org_mobile == " " || org_mobile == ""){
+			$('#error_org_mobile_is').text("Please enter valid mobile number").css("color", "red");
+			setTimeout(function(){  
+				$('#error_org_mobile_is').text('');
+			}, 5000);
+			flag=false;
+		}else{
+			checkMobile(org_mobile,"error_org_mobile_is");
+			if($("#error_org_mobile_is").text() != ''){
+				flag=false;
+			}
+		}
+		return flag;
+	}
+function updateUsersDetails(){
+	var user_fname = $('#getFirstname').val().trim();
+	var user_lname = $('#getLastname').val().trim();
+	var user_Mob = $('#UMobId').val().trim();
+	var logon_id = $('#getLogin').val().trim();
+	if(user_fname == "" || user_lname == "" || user_Mob == ""){
+		return displayErrorMessageEditUsers(user_fname,user_lname,user_Mob);
+	}else{
+		if(user_Mob != ""){
+			var regex = /^\d{10}$/;
+			 if (!regex.test(user_Mob)){
+				 $('#error_UserMobId').text("Please enter valid mobile number").css("color", "red");
+					setTimeout(function(){  
+						$('#error_UserMobId').text('');
+					}, 5000);
+					return false;
+			 }
+		}
+		if(logon_id != "" ){
+			var reg = /^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,4})$/;
+			 if (!reg.test(logon_id)){
+				 $('#error_UserlogonId').text("Please enter valid E-mail id").css("color", "red");
+				 setTimeout(function(){  
+						$('#error_UserlogonId').text('');
+					}, 5000);
+			 return false; 
+			}
+		}
+		
+	}
+	 displaySpinner();
+	 $.ajax({
+         type: "GET",
+         url : "edit_org_Users/"+role_Id+"?"+"orgUsrBpId="+orgUserBpId+"&"+"userId="+userId+"&"+"orgId="+index+"&"+$('#editUsers').serialize()+"&activity="+localStorage.getItem("activity"),
+         success: function (data) {
+        	 messageCenter('success','Updated Succesfully');
+        	 $('#editBpUsers').hide();
+        	 $('.modal-backdrop').hide();
+        	 $(".right_col").html(data);
+	 		 $(".right_col").show();
+	 		 $('#usersTable').DataTable({
+	 				"language": {
+		                "emptyTable": "No data found",
+		                "info": "Showing page _PAGE_ of _PAGES_",
+		                "infoFiltered": "(filtered from _MAX_ total records)"
+		            },
+		            "fnDrawCallback": function(oSettings) {
+		                if (10 >= oSettings.fnRecordsDisplay()) {
+		                    $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+		                    $(oSettings.nTableWrapper).find('.dataTables_filter').hide();
+		                    $(oSettings.nTableWrapper).find('.dataTables_info').hide();
+		                    //$(oSettings.nTableWrapper).find('.dataTables_length').hide();
+		                } else {
+		                    $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+		                    $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+		                    $(oSettings.nTableWrapper).find('.dataTables_info').show();
+		                    //  $(oSettings.nTableWrapper).find('.dataTables_length').show();
+		                }
+		                $(".select-removal").removeClass("getorg-select");
+	            		$(".select-removal").addClass("getorg-deselected");
+	            		$("#getOrgDetailsTab").addClass("getorg-submit-btn-disabled");
+	            		$("#getOrgDetailsTab").removeClass("getorg-submit-btn");
+		            },
+	 			});
+ 			 clearSpinner();
+         },
+         error: function (result) {
+        	 messageCenter('error','Some error occured, please try again later');
+        	 clearSpinner();
+         }
+ });
+}
+   
+   function getBgJob(){
+	   displaySpinner();
+		 $.ajax({
+	         type: "GET",
+	         url: "getBgJob/"+localStorage.getItem("orBpId")+"?page=displaybplaces",
+	         success: function (data) {
+	 			$(".right_col").html(data);
+	 			$(".right_col").show();
+	 			
+	 			getEllipseWithDataTable('#bg_jobs_table')
+	        		 clearSpinner();
+	         },
+	         error: function (result) {
+	        	 messageCenter('error','Some error occured, please try again later');
+	        	 clearSpinner();
+	         }
+	 });
+   }
+   
+   function addJobDetails(){
+	   $('#add-bg-job-details').click();
+	   displaySpinner();
+		 $.ajax({
+	         type: "GET",
+	         url: "addJobDetails/"+localStorage.getItem("orBpId")+"?bpName="+localStorage.getItem("bpName"),
+	         success: function (data) {
+	        	 $("#addJobs").show();
+	 			$("#addJobs").find('.modal-title-addJobs').text('Add Jobs');
+	 			$("#addJobs").find(".addJobs-body").html(data);
+	        		 clearSpinner();
+	         },
+	         error: function (result) {
+	        	 messageCenter('error','Some error occured, please try again later');
+	        	 clearSpinner();
+	         }
+	 });
+   }
+  function addOrgUsersDetails(){
+	  var userLogin_Id  = $('#logon_id').val();
+	  var userRole_Id  = $('#getRoleId').val();
+	  var userBp_Id  = $('#bp_Id_user').val();
+	 /* if(userBp_Id == null){
+		  userBp_Id = localStorage.getItem('orBpId');
+	  }*/
+	 if(userLogin_Id == "" ){
+			return displayCheckUsersErrorMessages(userLogin_Id);
+		}else{
+			var reg = /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/;
+			 if (!reg.test(userLogin_Id)){
+				 $('#error_logon_Id').text("Please enter valid E-mail id").css("color", "red");
+				 setTimeout(function(){  
+						$('#error_logon_Id').text('');
+					}, 5000);
+				 return false;
+			}
+		}
+	 if(userRole_Id == 0 ){
+		 return displayCheckUsersRoleErrorMessages(userRole_Id);
+	 }
+	  $("#user_first_name").attr('disabled',false);
+	  $("#user_last_name").attr('disabled',false);
+	  $("#user_mobile_number").attr('disabled',false);
+	  displaySpinner();
+		 $.ajax({
+	         type: "GET",
+	         url: "getUmUserDetails/"+$("#logon_id").val(),
+	         success: function (data) {
+	        	$("#addBpUsers").show();
+	        	var firstname=$(data).find("#user_first_name").val();
+	        	var lastname=$(data).find("#user_last_name").val();
+	        	var mobile = $(data).find("#user_mobile_number").val();
+	        	userLogonId=$(data).find("#user_logon_id").val();
+	        	$('#first_name_div').show();
+	        	$('#last_name_div').show();
+	        	$('#mobile_div').show();
+	        	if(firstname.length > 0 && lastname.length > 0){
+	        		$("#user_first_name").val(firstname).attr('disabled',true);
+		        	$("#user_last_name").val(lastname).attr('disabled',true);
+		        	$("#user_mobile_number").val(mobile).attr('disabled',true);
+		        	$("#bp_Id_user").attr("disabled",true);
+		        	$("#getRoleId").attr("disabled",true);	
+		        	$("#regFlag").val("REG_USERS");
+	        	}
+	        	$("#regFlag").val("REG_USERS");
+	        	$('#addUserBtn_1').hide();
+	        	$('#addUserBtnNew').show();
+	        	clearSpinner();
+	         },
+	         error: function (result) {
+	        	 messageCenter('error','Some error occured, please try again later');
+	        	 clearSpinner();
+	         }
+	 });
+  }
+  function selectRole(){
+	  var roleId = $("#getRoleId").val();
+	  if(roleId == 1){
+		  $('#business_place_add_user').hide();  
+	  }else{
+		  $('#business_place_add_user').show();  
+	  }
+  }
+  function addNewUserOrg(){
+	  var fName = $("#user_first_name").val().trim();
+	  var lName = $("#user_last_name").val().trim();
+	  var mNum = $("#user_mobile_number").val().trim();
+	  var roleId = $("#getRoleId").val();
+	  var bpName = $('#bp_Id_user').val();
+	  if(fName == 0 || lName == 0 || mNum == 0 ){
+		  return displayCheckNewUsersErrorMessages(fName,lName,mNum);
+	  }else{
+		  if(mNum != null){
+				checkMobile(mNum,"error_Mname");
+				if($("#error_Mname").text() != ''){
+					return false;
+				}
+			}
+	  }
+	  var url;
+	  if(userLogonId.length >0){
+		   url="addOrgUsersDet?"+$('#addUsers').serialize()+"&firstname="+$('#user_first_name').val()
+	         +"&lastname="+$('#user_last_name').val()+"&orgId="+index+"&bpLegalName="+$('#bp_Id_user option:selected').text()
+	         +"&mobile="+$('#user_mobile_number').val()+"&bpId="+$('#bp_Id_user').val()+"&roleId="+roleId+"&logonuserId="+userLogonId+"&activityId="+localStorage.getItem("activity");
+	  }else{
+		   url="addOrgUsersDet?"+$('#addUsers').serialize()+"&orgId="+index+"&logonuserId="+userLogonId+"&activityId="+localStorage.getItem("activity")+"&roleId="+roleId;
+	  }
+	 displaySpinner();
+ 	   $.ajax({
+         type: "GET",
+         url : url,
+         success: function (data) {
+        	 var errorMess = $(data).find("#error_message_users").val();
+             if(errorMess == 'DuplicateUser'){
+            	 messageCenter('warning','User already exits to the selected business place');
+             }else{
+            	 messageCenter('success','You have added user succesfully');
+             }
+        	 $('#addBpUsers').hide();
+        	 $('.modal-backdrop').hide();
+        	 $(".right_col").html(data);
+	 		 $(".right_col").show();
+	 		 $('#usersTable').DataTable(
+	 				{
+    	 				"language": {
+    		                "emptyTable": "No data found",
+    		                "info": "Showing page _PAGE_ of _PAGES_",
+    		                "infoFiltered": "(filtered from _MAX_ total records)"
+    		            },
+    		            "fnDrawCallback": function(oSettings) {
+    		            	
+    		                if (10 >= oSettings.fnRecordsDisplay()) {
+    		                    $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+    		                    $(oSettings.nTableWrapper).find('.dataTables_filter').hide();
+    		                    $(oSettings.nTableWrapper).find('.dataTables_info').hide();
+    		                    //$(oSettings.nTableWrapper).find('.dataTables_length').hide();
+    		                } else {
+    		                    $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+    		                    $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+    		                    $(oSettings.nTableWrapper).find('.dataTables_info').show();
+    		                    //  $(oSettings.nTableWrapper).find('.dataTables_length').show();
+    		                }
+    		            	
+    		            		$(".select-removal").removeClass("getorg-select");
+    		            		$(".select-removal").addClass("getorg-deselected");
+    		            		$("#getOrgDetailsTab").addClass("getorg-submit-btn-disabled");
+    		            		$("#getOrgDetailsTab").removeClass("getorg-submit-btn");
+    		            	
+    		            },
+    	 			}		 
+	 		 );
+	 		 clearSpinner();
+         },
+         error: function (result) {
+        	 messageCenter('error','Some error occured, please try again later');
+        	 clearSpinner();
+         }
+ });
+  }
+  function openEditOrgPop(ticket,email){
+		 $.ajax({
+	         type: "GET",
+	         url: "openEditOrgPop?ticket="+ticket+"&email="+email+"&module=module_edit_organisation",
+	         success: function (data) {
+	        	 var activity = $(data).find("#activity_orgEditId").val();
+	 			 localStorage.setItem("activity",activity);
+	        	 $('#edit_org_bp_id').click();
+	         },
+	         error: function (result) {
+	        	 messageCenter('error','Some error occured, please try again later');
+	        	 clearSpinner();
+	         }
+	 }); 
+  }
+  function openEditBpPop(ticket,email){	 
+		 $.ajax({
+	         type: "GET",
+	         url: "openEditBpPop?ticket="+ticket+"&email="+email+"&module=module_edit_Bp"+"&"+"orgbpindex="+bpindex,
+	         success: function (data) {
+	        	 var activity = $(data).find("#activity_orgEditId").val();
+	 			 localStorage.setItem("activity",activity);
+	 			 $('#edit_bp_id').click();
+	         },
+	         error: function (result) {
+	        	 messageCenter('error','Some error occured, please try again later');
+	        	 clearSpinner();
+	         }
+	 }); 
+}
+  function editOrgUserDet(ticket,email){
+	  $.ajax({
+	         type: "GET",
+	         url: "editOrgUserDet?ticket="+ticket+"&email="+email+"&module=module_edit_org_details",
+	         success: function (data) {
+	        	 var activity = $(data).find("#activity_orgEditId").val();
+	 			 localStorage.setItem("activity",activity);
+	        	 $('#edit_org_user').click();
+	         },
+	         error: function (result) {
+	        	 messageCenter('error','Some error occured, please try again later');
+	        	 clearSpinner();
+	         }
+	 }); 
+  }
+  
+   
+ 
+   $("#main_checkbox").change(function(){ 
+	   mulBpIds=[];
+	    $(".sub_checkbox").prop('checked', $(this).prop("checked"));
+	    if($(this).prop("checked")){
+	    	$.each($("input[name='mulBpCheck']:checked"), function(){            
+	    		mulBpIds.push($(this).val());
+            });
+	    	console.log(mulBpIds);
+	    	//$(".up_bus_user").removeAttr('disabled');
+	    }
+	    if($('.sub_checkbox:checked').length ==0){
+	    	$(".up_bus_user").attr("disabled","disabled");
+	    	$(".add_user").attr("disabled","disabled");
+	    }else{
+	    	 $(".up_bus_user").removeAttr("disabled");
+	    	 $(".add_user").removeAttr("disabled");
+	    }
+	    console.log($("#getOrgDetailsTab .disable_class_btn").attr("disabled")+"<-------------");
+	    if($("#getOrgDetailsTab .disable_class_btn").attr("disabled") == undefined){
+	    	$("#getOrgDetailsTab .disable_class_btn").attr("disabled", true);
+		      $("#getOrgDetailsTab .dropdown button").attr("disabled", true);
+	    }
+	    
+	      console.log("disable_class_btn" )
+	    $("#mulBpIds").text(mulBpIds);
+	   /* if($(".up_bus_user").hasClass("intro")){
+	    	$(".up_bus_user").removeClass("intro");
+	    	$(".up_bus_user").attr('disabled',false);
+	    	
+	    }else{
+	    	$(".up_bus_user").addClass("intro");
+	    	$(".up_bus_user").attr('disabled',true);
+	    	
+	    }*/
+	});
+   
+   /*$('.sub_checkbox').change(function(){ 
+	    if(false == $(this).prop("checked")){ //if this item is unchecked
+	        $("#main_checkbox").prop('checked', false); //change "select all" checked status to false
+	    }
+	    if ($('.sub_checkbox:checked').length == $('.sub_checkbox').length ){
+	        $("#main_checkbox").prop('checked', true);
+	    }
+	});*/
+   
+   
+ function getCustmerDLBP(){
+	 var busPlace = $('#dlBpname_1').val();
+	 var dataloadType = $('#dlLoadType').val();
+	 var dlType = $('#dlLoadType option:selected').text();
+   if(busPlace == ""){
+		document.getElementById('dlBpname_1').style.borderColor = "red";
+		return false; 
+	}
+     displaySpinner();
+	 $.ajax({
+	         type:"GET",
+	         url:"getDLJobs?"+$('#manageDLJobs').serialize()+"&dataload="+dataloadType+"&dlType="+dlType,
+	         success: function (data) {
+	        	 $(".right_col").html(data);
+		 		 $('#bp_legal_name').hide();
+	         	 $('#bp_legal_name_bp').show();
+	         	 $(".organisation-create").show();
+		 		 $('#manageBPDLTable').DataTable({
+		 			retrieve: true,
+		 			 "fnDrawCallback": function(oSettings) {
+		 		         if (10 >= oSettings.fnRecordsDisplay()) {
+		 		              $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+		 		             /* $(oSettings.nTableWrapper).find('.dataTables_filter').show();*/
+		 		              $(oSettings.nTableWrapper).find('.dataTables_info').hide();
+		 		              $(oSettings.nTableWrapper).find('.dataTables_length').hide();
+		 		         } else {
+		 		             $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+		 		             $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+		 		             $(oSettings.nTableWrapper).find('.dataTables_info').show();
+		 		             $(oSettings.nTableWrapper).find('.dataTables_length').show();
+		 		         }
+		 		     },
+		 		 });
+		 		 clearSpinner();
+	         },
+	         error: function (result) {
+	        	 messageCenter('error','Some error occured, please try again later');
+	        	 clearSpinner();
+	         }
+	 }); 
+ }
+  
+function reIntitiateJob(dlJobId,dlJobStatus){
+	 displaySpinner();
+	 $.ajax({
+         type: "GET",
+         url : "reIntitiateJob?dlJobId="+dlJobId+"&dlJobStatus="+dlJobStatus,
+         success: function (data) {
+        	 messageCenter('success','Job has been successfully re initiated');
+        	 $(".right_col").html(data);
+        	 $('#manageBPDLTable').DataTable({
+        		 retrieve: true,
+        		 "fnDrawCallback": function(oSettings) {
+        	         if (10 >= oSettings.fnRecordsDisplay()) {
+        	              $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+        	             /* $(oSettings.nTableWrapper).find('.dataTables_filter').show();*/
+        	              $(oSettings.nTableWrapper).find('.dataTables_info').hide();
+        	              $(oSettings.nTableWrapper).find('.dataTables_length').hide();
+        	         } else {
+        	             $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+        	             $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+        	             $(oSettings.nTableWrapper).find('.dataTables_info').show();
+        	             $(oSettings.nTableWrapper).find('.dataTables_length').show();
+        	         }
+        	     },
+        	 });
+        	 clearSpinner();
+         },
+         error: function (result) {
+        	 messageCenter('error','Some error occured, please try again later');
+        	 clearSpinner();
+         }
+ });
+}  
+function displayDlJobsPage(){
+	displaySpinner();
+	 $.ajax({
+         type: "GET",
+         url : "getBpDLJobHistory/"+localStorage.getItem('bpName'),
+         success: function (data) {
+        	 $(".right_col").html(data);
+        	 $('#bp_legal_name').hide();
+        	 $('.organisation-create').hide();
+        	 $('.Back-BusinessPlace').show();
+        	 localStorage.getItem('bpName');
+        	 $('#manageBPDLTable').DataTable();
+         	 $('#bp_legal_name_bp').show();   
+        	 clearSpinner();
+         },
+         error: function (result) {
+        	 messageCenter('error','Some error occured, please try again later');
+        	 clearSpinner();
+         }
+ });
+}
+function reIntitiateAllJob(dlJobId,dlJobStatus,name){
+	var dlJobId = $('#dlJobIdIs-'+dlJobId).text();
+	var dlJobStatus = $('#dlJobStatusIs-'+dlJobStatus).text();
+	displaySpinner();
+	 $.ajax({
+        type: "GET",
+        url : "reIntitiateJob?dlJobId="+dlJobId+"&dlJobStatus="+dlJobStatus+"&ticket="+localStorage.getItem("activity")+
+        "&email="+localStorage.getItem("emailId")+"&module=module_reIntitiateJob"+"&bpName="+localStorage.getItem('bpName')+"&name="+name,
+        success: function (data) {
+       	 messageCenter('success','Re-initiate job is success');
+       	 $(".right_col").html(data);
+       	 $('#manageBPDLTable').DataTable();
+       	 $('#bp_legal_name').hide();
+       	 $('#reloaDataLoad').click();
+       	 clearSpinner();
+        },
+        error: function (result) {
+       	 messageCenter('error','Some error occured, please try again later');
+       	 clearSpinner();
+        }
+});
+	
+}
+function displayCheckUsersErrorMessages(userLogin_Id){
+	var flag=true;
+	if(userLogin_Id == 0){
+		$('#error_logon_Id').text("Please enter E-mail id").css("color", "red");
+		setTimeout(function(){  
+			$('#error_logon_Id').text('');
+		}, 5000);
+		flag=false;
+	}
+	return flag;
+}
+function displayCheckNewUsersErrorMessages(fName,lName,mNum){
+	var flag=true;
+	if(fName == 0){
+		$('#error_fname').text("Please enter valid first name").css("color", "red");
+		setTimeout(function(){  
+			$('#error_Firstname').text('');
+		}, 5000);
+		flag=false;
+	}
+	if(lName == 0){
+		$('#error_lname').text("Please enter valid last name").css("color", "red");
+		setTimeout(function(){  
+			$('#error_Lastname').text('');
+		}, 5000);
+		flag=false;
+	}
+	if(mNum == 0){
+		$('#error_Mname').text("Please enter valid mobile number").css("color", "red");
+		setTimeout(function(){  
+			$('#error_Mname').text('');
+		}, 5000);
+		flag=false;
+	}
+	return flag;
+}
+function displayCheckUsersRoleErrorMessages(userRole_Id){
+	var flag=true;
+	if(userRole_Id == 0){
+		$('#error_user_role').text("Please select valid role").css("color", "red");
+		setTimeout(function(){  
+			$('#error_user_role').text('');
+		}, 5000);
+		flag=false;
+	}
+	/*if(userBp_Id == 0){
+		$('#error_bus_bpid').text("Please select business place").css("color", "red");
+		setTimeout(function(){  
+			$('#error_bus_bpid').text('');
+		}, 5000);
+		flag=false;
+	}*/
+}
+function showOrgLogPopup(){ 
+	$('#dispOrgLogs').attr("data-target","#viewApilogOrgForm");
+}
+
+/*$(".right_col").html(data);
+    $(".right_col").show();
+    $("#orgSettingTable").DataTable();*/
+function downloadTwoAReport(){
+	
+	       $.ajax({
+	           type: "GET",
+	           url :"getinvoices?orbpId="+localStorage.getItem("orBpId")+"&bpname="+localStorage.getItem("bpName"),
+	           success: function (data) {
+	        	 if(data == "0"){
+	   	      		messageCenter('success','No data available to download');
+	   	      	 }else{
+	   	      		 console.log(data)
+	   	      		window.location.href = data;
+	   	      	 }
+	          	 clearSpinner();
+	           },
+	           error: function (result) {
+	          	 messageCenter('error','Some error occured, please try again later');
+	          	 clearSpinner();
+	           }
+	    });
+	
+	}
+function getOrgLoginHistory(){
+	displaySpinner();
+	 $.ajax({
+       type: "GET",
+       url : "getOrgLoginHistory/"+index,
+       success: function (data) {
+      	 $(".right_col").html(data);
+       	 $(".right_col").show();
+      	 $('#orgLogHisDataTable').DataTable();
+      	 clearSpinner();
+       },
+       error: function (result) {
+      	 messageCenter('error','Some error occured, please try again later');
+      	 clearSpinner();
+       }
+});
+}
+function getuserloghisotry(){
+	var uEmail = $('#emailId').val();
+	if(uEmail =="" || uEmail ==" "){
+		$('#user_email_msg').text("Please enter valid E-mail id").css("color", "red");
+		setTimeout(function(){  
+			$('#user_email_msg').text('');
+		}, 5000);
+		
+		return false;
+	}
+	var reg = /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/;
+	 if (!reg.test(uEmail)){
+		 $('#user_email_msg').text("Please enter valid E-mail id").css("color", "red");
+		 setTimeout(function(){  
+				$('#user_email_msg').text('');
+			}, 5000);
+	 return false; 
+	}
+	displaySpinner();
+	 $.ajax({
+	       type: "GET",
+	       url : "getUserLoginHistory?emailUser="+uEmail,
+	       success: function (data) {
+	    	   var uId = $(data).find("#loginuserId").val();
+	    	   if(uId != null){
+	    		   $.ajax({
+	    		       type: "GET",
+	    		       url : "getAlluserLoginHistory/"+uId,
+	    		       success: function (data) {
+	    		    	   $("#userloginhistory").show();  
+	    		      	 $(".right_col").html(data);
+	    		       	 $(".right_col").show();
+	    		       	$('#emailIdIs').val(uEmail);
+	    		       	manageDataTable('#userLogHisTable')
+	    		      	// $('#userLogHisTable').DataTable();
+	    		      	 clearSpinner();
+	    		       },
+	    		       error: function (result) {
+	    		      	 messageCenter('error','Some error occured, please try again later');
+	    		      	 clearSpinner();
+	    		       }
+	    		});
+	    	   }else{
+	    		   $("#userloginhistory").hide();
+	 	      	  $(".right_col").html(data);
+	 	       	  $(".right_col").show();    
+	    	   }
+	    	  
+	      	 clearSpinner();
+	       },
+	       error: function (result) {
+	      	 messageCenter('error','Some error occured, please try again later');
+	      	 clearSpinner();
+	       }
+	});
+}
+function changeBpSettingValues(bpSetVal){
+	$('.edit_User_Bp_Setting_Val-'+bpSetVal).attr('disabled',false);
+}
+function displayErrorMessageEditUsers(user_fname,user_lname,user_Mob){
+	var flag=true;
+	if(user_fname == ""){
+		$('#error_UserFirstname').text("Please enter valid first name").css("color", "red");
+		setTimeout(function(){  
+			$('#error_UserFirstname').text('');
+		}, 5000);
+		flag=false;
+	}
+	if(user_lname == ""){
+		$('#error_UserLastname').text("Please enter valid last name").css("color", "red");
+		setTimeout(function(){  
+			$('#error_UserLastname').text('');
+		}, 5000);
+		flag=false;
+	}
+	if(user_Mob == ""){
+		$('#error_UserMobId').text("Please enter valid  mobile number").css("color", "red");
+		setTimeout(function(){  
+			$('#error_UserMobId').text('');
+		}, 5000);
+		flag=false;
+	}
+	return flag;
+}
+
+function getFinancialDetails(){
+	$.ajax({
+		type : "GET",
+		url	 : "getfinancialInfo/"+localStorage.getItem("orBpId"),
+		success: function (data) {
+			$("#finance_info_pop").find(".finanace-info-body").html(data);
+	      	 clearSpinner();
+	       },
+	       error: function (result) {
+	      	 messageCenter('error','Some error occured, please try again later');
+	      	 clearSpinner();
+	       }
+	});
+}
+function restoreBPcredentails(ticket,email){
+	var orgBpId = bpindex;
+	var orgId = index;
+	 swal({
+		  title: 'Do you want to restore the business place credentials?',
+		  type: 'warning',
+		  showCancelButton: true,
+		  confirmButtonColor: '#3085d6',
+		  cancelButtonColor: '#d33',
+		  confirmButtonText: 'Yes!'
+		}).then((result) => {
+		  if (result.value) {
+		   
+			 displaySpinner();
+				$.ajax({
+					type : "GET",
+					url  : "restoreBPcredentails?organisationId="+orgId+"&organizationBpId="+orgBpId+"&ticket="+ticket+"&email="+email+"&module=module_add_restoreBpCred",
+					success : function(data){
+						 var errorMess = $(data).find("#BpCerMesIs").val();
+			             if(errorMess == 'Exits'){
+			            	 messageCenter('success','There are no business place credentials to restore');
+			             }else{
+			        	 messageCenter('success','You have succesfully restored business place credentials');
+			             }
+			        	 $('#editBplaces').hide();
+			        	 $('.modal-backdrop').hide();
+			        	 $(".right_col").html(data);
+				 		 $('#bussinesPlacetable').DataTable();
+				 			clearSpinner();
+					},
+					error : function(error){
+						messageCenter('error','Some error occured, please try again later');
+			        	 clearSpinner();
+						
+					}
+				});
+		  }
+		})
+}
+var finPrdIndex=0;
+function editFinanceDetails(index,finPeriodId){
+	finPrdIndex = index;
+	if(index == 0){
+		if($("#gross-rev0").attr("disabled")){
+			$("#gross-rev0").removeAttr("disabled");
+			$("#gross-rev1").attr("disabled","disabled");
+		}
+	}
+	if(index == 1){
+		if($("#gross-rev1").attr("disabled")){
+			$("#gross-rev1").removeAttr("disabled");
+			$("#gross-rev0").attr("disabled","disabled");
+		}
+	}
+	
+}
+
+function saveGrossRevenue(){
+	var grossrev0 = $("#gross-rev0").val();
+	var grossrev1 = $("#gross-rev1").val();
+	/*if(grossrev0.length == 0 || grossrev1.length == 0){
+		$("#error-mess-fin-det").text("Please enter gross revenue");
+		
+	}*/
+	
+	
+
+}
+function saveFinancialInformation(){
+	var grssRev = $("#gross-rev"+finPrdIndex).val();
+	if(grssRev.length == 0){
+		$("#error-mess-fin-det").text("Gross Revenue cannot be empty").css("margin-left", "-14px");
+		setTimeout(function(){  
+			$('#error-mess-fin-det').text('');
+		}, 5000);
+		return false;
+	}
+	
+	if(grssRev.length != 0){
+		if(isNaN(grssRev)){
+
+			$("#error-mess-fin-det").text("Revenue is allowed only without decimal points").css("margin-left", "-14px");
+			setTimeout(function(){  
+				$('#error-mess-fin-det').text('');
+			}, 5000);
+			return false;
+		}
+		if($("#gross-rev0").attr("disabled") && $("#gross-rev1").attr("disabled")){
+			$("#error-mess-fin-det").text("Please edit Gross Revenue Value and then click on save").css("margin-left", "-14px");
+			setTimeout(function(){  
+				$('#error-mess-fin-det').text('');
+			}, 5000);
+			return false;
+		}else{
+			displaySpinner();
+			$.ajax({
+		         type: "GET",
+		         url : "saveFinancialInformation/"+$("#finYearId"+finPrdIndex).val()+"?grssRev="+$("#gross-rev"+finPrdIndex).val(),
+		         success: function (data) {
+		        	 console.log(data);
+		        	 if(data == "200"){
+		        		 $("#error-mess-fin-det").text("Updated Successfully").css("margin-left", "-14px").css("color","green"); 
+		        		 setTimeout(function(){  
+		     				$('#error-mess-fin-det').text('');
+		     			}, 5000);
+		        	 }
+		        	 if(data == "error"){
+		        		 messageCenter('error','Some error occured, please try again later');
+		        	 }
+		             
+			 			clearSpinner();
+		         },
+		         error: function (result) {
+		        	 messageCenter('error','Some error occured, please try again later');
+		        	 clearSpinner();
+		         }
+		 });
+		}
+		
+		
+	}
+	
+}
+function get2areportpg(){
+	$.ajax({
+        type: "GET",
+        url : "gstr2areport",
+        success: function (data) {
+       	$("#dwnd2a").show();
+		$("#dwnd2a").find(".modal-body-download2a").html(data).find("#business_place_name").val(localStorage.getItem("bpName"));
+        },
+        error: function (result) {
+       	 messageCenter('error','Some error occured, please try again later');
+        }
+});
+}
+function getdwndUrl(){
+	var finPeriod=$("#fin_dwnd").val();
+	if(finPeriod.length == 0){
+		$("#error-fin-gstr-det").text("Please Select Finperiod").css("color", "red");
+		setTimeout(function(){  
+			$('#error-fin-gstr-det').text('');
+		}, 5000);
+		
+		return false;
+	}
+	$.ajax({
+        type: "GET",
+        url : "getdwndUrl?finperiod="+finPeriod+"&bpId="+localStorage.getItem("orBpId")+"&bpname="+localStorage.getItem("bpName"),
+        success: function (data) {
+       console.log(data);
+       if(data.length !=0){
+    	   $("#dwmd-2a-id").show();
+           $("#dwnd-link").attr("href",data);
+       }else{
+    	   messageCenter('success','No data available to download');
+       }
+       
+       
+        },
+        error: function (result) {
+       	 messageCenter('error','Some error occured, please try again later');
+        }
+});
+}
+function getCustmerDLGlobal(){
+	var dataloadType = $('#dlGlobalLoadType').val();
+	 var dlType = $('#dlGlobalLoadType option:selected').text();
+	 displaySpinner();
+	 $.ajax({
+	         type:"GET",
+	         url:"getGlobalDLJobs?"+$('#manageGlobalDLJobs').serialize()+"&dataload="+dataloadType+"&dlType="+dlType,
+	         success: function (data) {
+	        	 $(".right_col").html(data);
+	        	 $("#hideDiv").hide();
+		 		 $('#manageGlobalDLTable').DataTable({
+		 			retrieve: true,
+		 			 "fnDrawCallback": function(oSettings) {
+		 		         if (10 >= oSettings.fnRecordsDisplay()) {
+		 		              $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+		 		              $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+		 		              $(oSettings.nTableWrapper).find('.dataTables_info').hide();
+		 		              $(oSettings.nTableWrapper).find('.dataTables_length').hide();
+		 		         } else {
+		 		             $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+		 		             $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+		 		             $(oSettings.nTableWrapper).find('.dataTables_info').show();
+		 		             $(oSettings.nTableWrapper).find('.dataTables_length').show();
+		 		         }
+		 		     },
+		 		 });
+		 		 clearSpinner();
+	         },
+	         error: function (result) {
+	        	 messageCenter('error','Some error occured, please try again later');
+	        	 clearSpinner();
+	         }
+	 });
+}
+function getGLobalSchedulerJobs(){
+	var jName = $('#jName').val().trim();
+	var jType = $('#job_type_id').val();
+	var jdDocat = $('#doc_cat_id').val();
+	var status = $('#status').val().trim();
+	var jobTime = $('#start_time').val().trim();
+	var toDate = $('#end_time').val().trim();
+	displaySpinner();
+	$.ajax({
+		type: "GET",
+        url:"getglobalSchJobHistoryDetails?jNameIs="+jName+"&jTypeIs="+jType+"&jdDocatIs="+jdDocat+"&statusIs="+status+"&start_time="+jobTime+"&end_time="+toDate,
+        success: function (data) {
+        	$(".right_col").html(data);
+			$(".right_col").show();
+			$('#bg_jobs_table_global').DataTable({
+				retrieve: true,
+				"language": {
+	                "emptyTable": "No data found",
+	                "info": "Showing page _PAGE_ of _PAGES_",
+	                "infoFiltered": "(filtered from _MAX_ total records)"
+	            },
+				  "fnDrawCallback": function(oSettings) {
+				         if (10 >= oSettings.fnRecordsDisplay()) {
+				              $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+				             /* $(oSettings.nTableWrapper).find('.dataTables_filter').show();*/
+				              $(oSettings.nTableWrapper).find('.dataTables_info').hide();
+				              $(oSettings.nTableWrapper).find('.dataTables_length').hide();
+				         } else {
+				             $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+				             $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+				             $(oSettings.nTableWrapper).find('.dataTables_info').show();
+				             $(oSettings.nTableWrapper).find('.dataTables_length').show();
+				         }
+				     },
+			});
+			clearSpinner();
+        },
+        error: function (result) {
+            console.log("Error");
+        }
+    });
+}
+function addNewFinPeriod(){
+	var finPeriod = $('#CustFinPeriod').val();
+	if(finPeriod == ""){
+		$("#error_add_new_fin_period").text("Please enter valid Fin.Period").css("margin-left", "-14px");
+		setTimeout(function(){  
+			$('#error_add_new_fin_period').text('');
+		}, 5000);
+		return false;
+	}
+	displaySpinner();
+	 $.ajax({
+	         type:"GET",
+	         url:"addNewFinPer/"+finPeriod+"/?activity="+localStorage.getItem("activity"),
+	         success: function (data) {
+	        	 var errorMess = $(data).find("#getfinperioderrormessage").val();
+	        	 if(errorMess == 'FinPeriodExits'){
+	        		 messageCenter('warning','Fin. Period  exits.');
+	        	 }else{
+	        		 messageCenter('success','Fin. Period is added succesfully');
+	        	 }
+	        	 $(".right_col").html(data);
+	        	 $(".modal-backdrop").hide();
+		 		 $('#addFinPeriodTable').DataTable({
+		 			retrieve: true,
+		 			 "fnDrawCallback": function(oSettings) {
+		 		         if (10 >= oSettings.fnRecordsDisplay()) {
+		 		              $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+		 		              $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+		 		              $(oSettings.nTableWrapper).find('.dataTables_info').hide();
+		 		              $(oSettings.nTableWrapper).find('.dataTables_length').hide();
+		 		         } else {
+		 		             $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+		 		             $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+		 		             $(oSettings.nTableWrapper).find('.dataTables_info').show();
+		 		             $(oSettings.nTableWrapper).find('.dataTables_length').show();
+		 		         }
+		 		     },
+		 		 });
+		 		 clearSpinner();
+		 		document.location.reload();
+	         },
+	         error: function (result) {
+	        	 messageCenter('error','Some error occured, please try again later');
+	        	 clearSpinner();
+	         }
+	 });
+}
+function showFinPeriodAction(){
+	var finPeriod = $('#getfinPeriodId').val();
+	displaySpinner();
+	 $.ajax({
+	         url:"getFinPer/"+finPeriod,
+	         success: function (data) {
+	        	 $(".right_col").html(data);
+	        	 $(".modal-backdrop").hide();
+		 		 $('#addFinPeriodTable').DataTable({
+		 			retrieve: true,
+		 			 "fnDrawCallback": function(oSettings) {
+		 		         if (10 >= oSettings.fnRecordsDisplay()) {
+		 		              $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+		 		              $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+		 		              $(oSettings.nTableWrapper).find('.dataTables_info').hide();
+		 		              $(oSettings.nTableWrapper).find('.dataTables_length').hide();
+		 		         } else {
+		 		             $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+		 		             $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+		 		             $(oSettings.nTableWrapper).find('.dataTables_info').show();
+		 		             $(oSettings.nTableWrapper).find('.dataTables_length').show();
+		 		         }
+		 		     },
+		 		 });
+		 		 clearSpinner();
+	         },
+	         error: function (result) {
+	        	 messageCenter('error','Some error occured, please try again later');
+	        	 clearSpinner();
+	         }
+	 });
+}
+function addNewUserMulBus(){
+	 var fName = $("#user_first_name").val().trim();
+	  var lName = $("#user_last_name").val().trim();
+	  var mNum = $("#user_mobile_number").val().trim();
+	  var roleId = $("#getRoleId").val();
+	  var userLogin_Id  = $('#logon_id').val().trim();
+	  if(fName == 0 || lName == 0 || mNum == 0 ){
+		  return displayCheckNewUsersErrorMessages(fName,lName,mNum);
+	  }else{
+		  if(mNum != null){
+				checkMobile(mNum,"error_Mname");
+				if($("#error_Mname").text() != ''){
+					return false;
+				}
+			}
+	  }
+		 $.ajax({
+	         type: "GET",
+	         url : "addmuluserbp?fName="+fName+"&lName="+lName+"&mNum="+mNum+"&roleId="+roleId+"&userLogonId="+userLogonId+
+	         "&userLogin_Id="+userLogin_Id+"&OrgId="+index+"&mulBpIds="+mulBpIds+"&activity="+localStorage.getItem("activity"),
+	         success: function (data) {
+	        	$(".right_col").html(data);
+	 			$(".right_col").show();
+	 			var errorMess = $(data).find("#error_mul_bp_user").val();
+	 			 if(errorMess == 'DuplicateUser'){
+	            	 messageCenter('warning','User already exits for few or one business place');
+	             }else{
+	            	 messageCenter('success','You have added user succesfully');
+	             }
+	 			$('#bussinesPlacetable').DataTable({
+	 				retrieve: true,responsive: true,
+	 				 columnDefs: [ {
+                         "targets": [0],
+                        "orderable": false
+                   } ],
+                   "language": {
+		                "emptyTable": "No data found",
+		               /* "info": "Showing page _PAGE_ of _PAGES_",
+		                "infoFiltered": "(filtered from _MAX_ total records)"*/
+		            },
+		            "fnDrawCallback": function(oSettings) {
+		                if (10 >= oSettings.fnRecordsDisplay()) {
+		                    $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+		                    /*$(oSettings.nTableWrapper).find('.dataTables_filter').hide();
+		                    $(oSettings.nTableWrapper).find('.dataTables_info').hide();
+		                    $(oSettings.nTableWrapper).find('.dataTables_length').hide();*/
+		                } else {
+		                    $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+		                   // $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+		                    $(oSettings.nTableWrapper).find('.dataTables_info').show();
+		                    //  $(oSettings.nTableWrapper).find('.dataTables_length').show();
+		                }
+		                $(".select-removal").removeClass("getorg-select");
+	            		$(".select-removal").addClass("getorg-deselected");
+	            		$("#getOrgDetailsTab").addClass("getorg-submit-btn-disabled");
+	            		$("#getOrgDetailsTab").removeClass("getorg-submit-btn");
+		            },
+                   
+	 			});	
+	 			clearSpinner();
+	 			$(".modal-backdrop").hide()
+	         },
+	         error: function (result) {
+	        	 clearSpinner();
+	        	 $(".modal-backdrop").hide()
+	         }
+	 });
+}
+function addBpUsersDetails(){
+	  var userLogin_Id  = $('#logon_id').val();
+	  var userRole_Id  = $('#getRoleId').val().trim();
+	 if(userLogin_Id == "" ){
+			return displayCheckUsersErrorMessages(userLogin_Id);
+		}else{
+			var reg = /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/;
+			 if (!reg.test(userLogin_Id)){
+				 $('#error_logon_Id').text("Please enter valid E-mail id").css("color", "red");
+				 setTimeout(function(){  
+						$('#error_logon_Id').text('');
+					}, 5000);
+				 return false;
+			}
+		}
+	 if(userRole_Id == 0 ){
+		 return displayCheckUsersRoleErrorMessages(userRole_Id);
+	 }
+	  $("#user_first_name").attr('disabled',false);
+	  $("#user_last_name").attr('disabled',false);
+	  $("#user_mobile_number").attr('disabled',false);
+		 $.ajax({
+	         type: "GET",
+	         url: "getUmUserDetails/"+$("#logon_id").val(),
+	         success: function (data) {
+	        	$("#addBpUsers").show();
+	        	var firstname=$(data).find("#user_first_name").val();
+	        	var lastname=$(data).find("#user_last_name").val();
+	        	var mobile = $(data).find("#user_mobile_number").val();
+	        	userLogonId=$(data).find("#user_logon_id").val();
+	        	$('#first_name_div').show();
+	        	$('#last_name_div').show();
+	        	$('#mobile_div').show();
+	        	if(firstname.length > 0 && lastname.length > 0){
+	        		$("#user_first_name").val(firstname).attr('disabled',true);
+		        	$("#user_last_name").val(lastname).attr('disabled',true);
+		        	$("#user_mobile_number").val(mobile).attr('disabled',true);
+		        	/*$("#bp_Id_user").attr("disabled",true);*/
+		        	$("#getRoleId").attr("disabled",true);	
+		        	$("#regFlag").val("REG_USERS");
+	        	}
+	        	$("#regFlag").val("REG_USERS");
+	        	$('#addUserBtn_1').hide();
+	        	$('#addUserBtnNew').show();
+	        	clearSpinner();
+	         },
+	         error: function (result) {
+	        	 messageCenter('error','Some error occured, please try again later');
+	        	 clearSpinner();
+	         }
+	 });
+}
+function onClickAdvFilters(){
+	$("#toggle-advance").toggle();
+}
+function searchJobsByFilter(){
+	var status = $("#bg-job-status").val();
+	var jobType = $("#bg-job-type").val();
+	var fromDate = $("#fromJobDate").val();
+	var toDate = $("#toJobDate").val();
+	if(toDate.length == 0){
+		toDate = fromDate;
+	}
+	
+	console.log(fromDate);
+	$.ajax({
+		type:"GET",
+		contentType : "application/json; charset=utf-8",
+		url:"getbgjobsbyfilter/"+localStorage.getItem("orBpId")+"?status="+status+"&jobType="+jobType+"&fromDate="+fromDate+"&bpname="+localStorage.getItem("bpName")+"&toDate="+toDate,
+		  success: function (data) {
+				$(".right_col").html(data);
+	 			$(".right_col").show();
+	 			
+	 			getEllipseWithDataTable('#bg_jobs_table');
+	 			$("#bg-job-type").val(jobType).attr("selected","selected");
+	 			$("#fromJobDate").val(fromDate);
+	 			if(fromDate != toDate)
+	 			$("#toJobDate").val(toDate)
+	 			
+			  	clearSpinner();
+		       },
+		       error: function (result) {
+		      	 messageCenter('error','Some error occured, please try again later');
+		      	 clearSpinner();
+		       }
+	});
+	
+
+
+
+}
+function genGstr2Arep(){
+	
+		console.log("Entered")
+		displaySpinner();
+		$('.close').click();
+		 setTimeout(function(){  
+			 
+			 clearSpinner();
+			}, 6000);
+	
+}
+function commonAPICall(requestBody,methodName){
+	$.ajax({
+		type:"GET",
+		contentType : "application/json; charset=utf-8",
+		url:requestBody,
+		  success: function (data) {
+			  if(methodName == "getOrgDetails"){
+			  $(".right_col").html(data);
+				$(".right_col").show();
+				$('#GetOrgTable').DataTable({
+					retrieve: true,responsive: true,columnDefs:[{"targets": [0],"visible": false,"searchable": false}],
+					"language": {
+		                "emptyTable": "No data found",
+		                "info": "Showing page _PAGE_ of _PAGES_",
+		             
+		            },
+		            "fnDrawCallback": function(oSettings) {
+		                if (10 >= oSettings.fnRecordsDisplay()) {
+		                    $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+		                    $(oSettings.nTableWrapper).find('.dataTables_filter').hide();
+		                    $(oSettings.nTableWrapper).find('.dataTables_info').hide();  
+		                } else {
+		                    $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+		                    $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+		                    $(oSettings.nTableWrapper).find('.dataTables_info').show();
+		                }
+		                $(".select-removal").removeClass("getorg-select");
+	            		$(".select-removal").addClass("getorg-deselected");
+	            		$("#getOrgDetailsTab").addClass("getorg-submit-btn-disabled");
+	            		$("#getOrgDetailsTab").removeClass("getorg-submit-btn");
+		            },
+					
+				});
+				$(".organisation-create").removeAttr("disabled");
+				 var errorMess = $(data).find("#usermessageid").val();
+	             if(errorMess == 'UserNotExits'){
+	            	 if(document.getElementById("getOrganisationBtn") != undefined){
+	            		 document.getElementById("getOrganisationBtn").disabled = true;
+	            		 $(".organisation-create").css("cursor","not-allowed");
+	            	 }
+	             }else{
+				    $('#getOrganisationBtn').removeAttr('disabled');
+	             }
+				clearSpinner();
+			  }
+			  if(methodName == 'getAllBplaces'){
+				  $(".right_col").html(data);
+  	 			$(".right_col").show();
+  	 			$('#bussinesPlacetable').DataTable({
+  	 				retrieve: true,responsive: true,
+  	 				 columnDefs: [ {
+                           "targets": [0],
+                          "orderable": false
+                     } ],
+                     "language": {
+ 		                "emptyTable": "No data found",
+ 		                "info": "Showing page _PAGE_ of _PAGES_",
+ 		                "infoFiltered": "(filtered from _MAX_ total records)"
+ 		            },
+ 		            "fnDrawCallback": function(oSettings) {
+ 		                if (10 >= oSettings.fnRecordsDisplay()) {
+ 		                    $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+ 		                    $(oSettings.nTableWrapper).find('.dataTables_filter').hide();
+ 		                    $(oSettings.nTableWrapper).find('.dataTables_info').hide();
+ 		                    $(oSettings.nTableWrapper).find('.dataTables_length').hide();
+ 		                } else {
+ 		                    $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+ 		                    $(oSettings.nTableWrapper).find('.dataTables_info').show();
+ 		                }
+ 		             $(".select-removal").removeClass("getorg-select");
+	            		$(".select-removal").addClass("getorg-deselected");
+	            		$("#getOrgDetailsTab").addClass("getorg-submit-btn-disabled");
+	            		$("#getOrgDetailsTab").removeClass("getorg-submit-btn");
+ 		            },
+                     
+  	 			});	
+  	 			clearSpinner();
+  	 			$(".modal-backdrop").hide()
+  	         }
+			  if(methodName == 'getAllBpUsers'){
+				  $('.modal-backdrop').hide();
+  	        	$(".right_col").html(data);
+  	 			$(".right_col").show();
+  	 			$('#usersTable').DataTable({
+  	 				"language": {
+  		                "emptyTable": "No data found",
+  		                "info": "Showing page _PAGE_ of _PAGES_",
+  		                "infoFiltered": "(filtered from _MAX_ total records)"
+  		            },
+  		            "fnDrawCallback": function(oSettings) {
+  		            	
+  		                if (10 >= oSettings.fnRecordsDisplay()) {
+  		                    $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+  		                    $(oSettings.nTableWrapper).find('.dataTables_filter').hide();
+  		                    $(oSettings.nTableWrapper).find('.dataTables_info').hide();
+  		                } else {
+  		                    $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+  		                    $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+  		                    $(oSettings.nTableWrapper).find('.dataTables_info').show();
+  		                }
+  		            	
+  		            		$(".select-removal").removeClass("getorg-select");
+  		            		$(".select-removal").addClass("getorg-deselected");
+  		            		$("#getOrgDetailsTab").addClass("getorg-submit-btn-disabled");
+  		            		$("#getOrgDetailsTab").removeClass("getorg-submit-btn");
+  		            	
+  		            },
+  	 			});
+  	 			clearSpinner();
+			  }
+	        },
+		       error: function (result) {
+		      	 messageCenter('error','Some error occured, please try again later');
+		      	 clearSpinner();
+		       }
+	});
+}
+function getEllipseWithDataTable(id){
+	$(id).DataTable({
+		"responsive" : true,
+		"columnDefs": [ {
+            "targets": [0,1,3,5],
+            "render": function ( data, type, row ) {
+            	
+            	 /*for (x in row) {
+            	        text += row[x].length >10 ?  row[x].substr( 0, 10 ) +'…' : row[x] ;
+            	    }*/
+            	return data.length > 15 ?
+            	        data.substr( 0, 15 ) +"...." :
+            	        data;
+            }
+        } ],
+		"language": {
+            "emptyTable": "No data found",
+            "info": "Showing page _PAGE_ of _PAGES_",
+            "infoFiltered": "(filtered from _MAX_ total records)"
+        },
+        "fnDrawCallback": function(oSettings) {
+            if (10 >= oSettings.fnRecordsDisplay()) {
+                $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+                //$(oSettings.nTableWrapper).find('.dataTables_filter').hide();
+                $(oSettings.nTableWrapper).find('.dataTables_info').hide();
+                //$(oSettings.nTableWrapper).find('.dataTables_length').hide();
+            } else {
+                $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+              //  $(oSettings.nTableWrapper).find('.dataTables_filter').show();
+                $(oSettings.nTableWrapper).find('.dataTables_info').show();
+                //  $(oSettings.nTableWrapper).find('.dataTables_length').show();
+            }
+        },
+        
+	});
+}
+function getFromDate(){
+	$('#toJobDate').datepicker("destroy");
+	var fromDate = $("#fromJobDate").val(); 
+	var date = new Date(fromDate);
+	date.setDate(date.getDate() + 5); 
+	console.log(date)
+	$('#toJobDate').datepicker({minDate: fromDate,maxDate: date,dateFormat: "yy-mm-dd"});
+}
+function getFromDateSchedulerJobs(){
+	$('#end_time').datepicker("destroy");
+	var fromDate = $("#start_time").val(); 
+	var date = new Date(fromDate);
+	date.setDate(date.getDate() + 5); 
+	console.log(date)
+	$('#end_time').datepicker({minDate: fromDate,maxDate: date,dateFormat: "yy-mm-dd"});
+}
